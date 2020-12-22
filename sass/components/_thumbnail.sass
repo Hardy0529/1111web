@@ -1,0 +1,85 @@
+
+/*-------------------------*/
+/* $Thumbnail 
+/*-------------------------*/
+/* imgbox
+
+.imgbox
+  width: 100%
+  display: block
+  overflow: hidden
+  &.imgbox--Mask
+    position: relative
+    
+    &::after
+      content: ""
+      width: 100%
+      height: 100%
+      position: absolute
+      background: rgba($color_black , 0)
+      left: 0px
+      top: 0px
+      transition: all .3s
+.thumbnail
+  &:hover
+    .imgbox
+      &.imgbox--Mask
+        &::after
+          background: rgba($color_black , 0.5)
+.imgbox__inner
+  width: 100%
+  height: 0
+  position: relative
+
+.imgbox__inner-4-3
+  padding-top: calc(100% * 3 / 4)
+.imgbox__inner-16-9
+  padding-top: calc(100% * 9 / 16)
+
+.imgbox__inner .image
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-size: cover
+  background-position: center
+
+/* Thumbnail
+
+.thumbnail
+  color: $color_black
+  margin-bottom: 40px
+.thumbnail__class
+  font-size: 14px
+  display: inline-block
+  padding: 10px 0px
+  color: rgba($color_primary , 0.8)
+.thumbnail__title
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+  font-size: 24px
+  font-weight: 400
+  line-height: 24px
+  letter-spacing: 0.04em
+  margin-top: 15px
+  margin-bottom: 15px
+  color: $color_black
+
+.thumbnail__preview
+  height: 72px
+  overflow: hidden
+  margin-bottom: 8px
+  color: rgba($color_secondary , 0.7) 
+  height: 72px
+  +ellipsis-multi(3)
+  
+.thumbnail__date
+  font-size: 14px
+  color: rgba($color_primary , 0.8)
+
+
+.thumbnail__btn-group .btn
+  margin-bottom: 0

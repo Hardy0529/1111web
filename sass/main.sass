@@ -1,0 +1,61 @@
+// base
+@import ./helpers/_mixins
+@import ./helpers/_variables
+@import ./base/_reset
+@import ./base/_color
+@import ./base/_typography
+@import ./base/_icon
+@import ./base/_utility
+
+// layout
+@import ./layout/_grid
+
+
+// components
+@import ./components/_buttons
+@import ./components/_navigation
+@import ./components/jumbotron
+@import ./components/_thumbnail
+@import ./components/_footer
+
+
+
+/*-------------------------*/
+/* Globel
+/*-------------------------*/
+.wrapper
+	overflow: hidden
+
+.givePadding
+  padding: 60px 0px 60px 0px
+
+
+
+/*-------------------------*/
+/* article
+/*-------------------------*/
+.article
+  .subtitle
+    color: $color_secondary
+  .class-nav 
+    margin-top: 60px
+    margin-bottom: 40px
+    nav 
+      .category-title
+        display: inline-block
+        margin-right: 30px
+        h3
+          margin: 0
+          color: $color_secondary
+          font-size: 16px
+          &:hover
+            color: $color_primary
+      .category-classify
+        display: inline-block
+        margin-right: 20px
+        h3
+          margin: 0
+          color: $color_secondary
+          font-size: 16px
+          &:hover
+            color: $color_primary

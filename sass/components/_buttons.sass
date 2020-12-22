@@ -1,0 +1,115 @@
+/*-------------------------*/
+/* $Button 
+/*-------------------------*/
+.btn
+  /* structure
+  display: inline-block
+  vertical-align: middle
+  position: relative
+  margin: 0
+  height: 36px
+  line-height: 36px
+  padding: 0 16px
+  min-width: 64px
+  box-sizing: border-box
+
+  /* style
+  font-size: 14px
+  text-align: center
+  font-weight: 500
+  font-family: $btn_font
+  letter-spacing: 0
+  text-transform: uppercase
+  text-decoration: none
+  color: $color_black
+  background-color: $color_default
+  border: 0
+  border-radius: 2px
+  outline: none
+
+  /* interact
+  cursor: pointer
+  overflow: hidden
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+  -webkit-user-drag: none
+  transition: background-color 0.3s
+
+.btn--hover, .btn:hover, .btn--hover, .btn:active
+  background-color: darken($color_default, $amount)
+  color: $color_black
+
+.btn--disabled
+  color: $color_white
+  pointer-events: none
+  background-color: $color_default
+
+  &:hover, &:active, &:focus
+    color: $color_white
+    pointer-events: none
+    background-color: $color_default
+
+.btn
+  &.btn--primary, &.btn--secondary, &.btn--positive, &.btn--negative
+    color: $color_white
+
+  &.btn--primary
+    background-color: $color_primary
+
+    &.btn--hover, &:hover
+      background-color: darken($color_primary, $amount)
+
+  &.btn--secondary
+    background-color: $color_secondary
+
+    &.btn--hover, &:hover
+      background-color: darken($color_secondary, $amount)
+
+  &.btn--positive
+    background-color: $color_positive
+
+    &.btn--hover, &:hover
+      background-color: darken($color_positive, $amount)
+
+  &.btn--negative
+    background-color: $color_negative
+
+    &.btn--hover, &:hover
+      background-color: darken($color_negative, $amount)
+
+  &.btn--lg
+    font-size: 22px
+    line-height: 56px
+    height: 56px
+    font-weight: 400
+
+  &.btn--md
+    font-size: 18px
+    line-height: 48px
+    height: 48px
+
+  &.btn--sm
+    font-size: 14px
+    line-height: 32px
+    height: 32px
+
+/* Size
+
+/* group
+
+.btn-group .btn
+  margin-left: 8px
+  margin-right: 8px
+  margin-bottom: 16px
+
+.btn-group--center
+  text-align: center
+
+.btn-group--right
+  text-align: right
+
+  .btn
+    margin-right: 0
+    margin-left: 16px
