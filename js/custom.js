@@ -13,5 +13,21 @@ $(document).ready(function() {
 		}
 	})
 
-
+	//top
+    $("#top_page").click(function () {
+        jQuery("html,body").animate(
+            {
+                scrollTop: 0,
+            },
+            1000
+        );
+    });
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 300) {
+            $("#top_page").fadeIn("fast");
+        } else {
+            $("#top_page").stop().fadeOut("fast");
+        }
+        return false;
+    });
 });
