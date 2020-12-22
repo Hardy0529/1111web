@@ -23,7 +23,7 @@ $(document).ready(function() {
         );
     });
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
+        if ($(this).scrollTop() > 500) {
             $("#top_page").fadeIn("fast");
         } else {
             $("#top_page").stop().fadeOut("fast");
