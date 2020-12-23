@@ -10,7 +10,7 @@
 	<div class="wrapper bg-color--light-grey">
 
 		<!-- Start header -->
-		<header class="header js-header">
+		<header class="header js-header header--fix" id="js_headerSearch">
 			<div class="header_row">
 				<div class="container">
 					<div class="navbar u-clearfix">
@@ -27,10 +27,8 @@
 							</div>
 							<div class="menu-toggle_Text">
 								Navigation
-							</div>
-							
+							</div>	
 						</a>
-						
 						<div class="nav u-clearfix">
 							<div id="overlay" class="navbar__nav popup-nav u-clearfix">
 								<ul class="menu nav__menu u-clearfix">
@@ -42,13 +40,17 @@
 									<span></span>
 								</a>
 							</div>
-							<a href="#" class="nav__icon-group">
-								<div class="icon-btn">
-									<i class="icon fa fa-search" aria-hidden="true"></i>
+							<a href="#!" class="nav__icon-group">
+								<div id="icon-btn_search">
+									<div class="icon-btn">
+										<i class="icon fa fa-search" aria-hidden="true"></i>
+									
+									</div>
+									<div class="icon-btn_Text">
+										Search
+									</div>
 								</div>
-								<div class="icon-btn_Text">
-									Search
-								</div>
+								
 							</a>
 	
 						</div>
@@ -57,11 +59,23 @@
 						
 				</div>
 			</div>
-			
-			<form action="">
-				<div class="site_search_row">
-					
+			<form action="" class="header_form_seach " id="js-search"> 
+				<div class="container ">
+					<div class="site_search_row u-clearfix"  >
+						<div class="site_search_cell">
+							<div class="site_search_fieldset u-clearfix">
+									<input class="site_search_input" type="text" id="searchIcon" name="" placeholder="Search..." value="">
+
+								<button class="site_search_button" type="">
+									<div class="icon-btn">
+										<i class="icon fa fa-search"></i>
+									</div>
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
+				
 			</form>
 		</header>	
 		<!-- End header -->
@@ -100,7 +114,7 @@
 
 
 		<!-- Start article -->
-		<div class="article article_pd_top">
+		<div class="article position_pd_top">
 			<div class="container">	
 				<h2 class="subtitle u-text-center">文章專區</h2>	
 				<!-- Start category -->

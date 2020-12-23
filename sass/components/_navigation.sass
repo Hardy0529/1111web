@@ -3,13 +3,14 @@
 /*-------------------------*/
 
 .header
-  position: fixed
-  top: 0
-  left: 0
   width: 100%
   z-index: 100
   transition: all 0.3s
   background: linear-gradient(to bottom,rgba(0,0,0,0.45),transparent 90%)
+  &.header--fix
+    position: fixed
+    top: 0
+    left: 0
   ul
     margin: 0px
     padding: 0px
@@ -21,6 +22,7 @@
       padding: 6px 0px
 
 .navbar__logo
+  width: 150px
   display: block
   margin-right: auto
   margin-left: auto
@@ -51,9 +53,36 @@
         width: 140px 
         padding-top: 10px
       .cls-1
-        fill: #fff
+        fill: $color_white
      
 .header
+  &.js_header--seach
+    background: $color_light-grey
+    // background: red
+    .navbar__logo
+      h1
+        color: $color_primary
+        svg
+          .cls-1
+            fill: $color_primary
+    .nav__menu 
+      @media (min-width: 961px)
+        .menu__item
+          color: $color_primary 
+    .nav__icon-group 
+      .icon-btn 
+        @media (min-width: 961px)
+          .icon
+             color: $color_primary  
+    @media (max-width: 960px)
+      .nav__icon-group 
+        border: 1px solid #999a94
+        background: rgba( $color_grey ,0 )
+        .icon-btn 
+          .icon
+             color: $color_primary
+        .icon-btn_Text
+          color: $color_primary 
   &.header--scrolling
     background: $color_light-grey
     box-shadow: 0 3px 5px rgba(0,0,0,0.1)
@@ -193,7 +222,7 @@
     opacity: 0
     visibility: hidden
     transition: all 0.3s
-    z-index: 10
+    z-index: 1001
 
   #overlay:target
     opacity: 1
