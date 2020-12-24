@@ -5,18 +5,42 @@ $(document).ready(function() {
         $("#js-search").slideToggle(500);
         if($("#js_headerSearch").hasClass("js_header--seach")){ 
             $(".header").addClass("js_header--seach");
-            $(".header_form_seach ").css("height", "90px")
-            $(".header_form_seach ").css("overflow", "hidden")
+         
+        }
+  
+       
+    });
+    $("#icon-btn_search").click(function(){ 
+        $(".search_click_Mask").toggleClass("click_Search_Mask");
+        if($(".search_click_Mask").hasClass("click_Search_Mask")){ 
+            $(".search_click_Mask").addClass("click_Search_MaskStyle")
+            function unScroll() {
+                var top = $(document).scrollTop();
+                $(document).on('scroll.unable',function (e) {
+                    $(document).scrollTop(top);
+                })
+            }
+            $('html,body').css({'overflow': 'hidden'});
         }
         else{
-            $(".header").removeClass("js_header--seach");
-            $(".header_form_seach ").css("height", "")
-            $(".header_form_seach ").css("overflow", "hidden")
+            function removeUnScroll() {
+                $(document).unbind("scroll.unable");
+               
+            }
+            $('html,body').css({'overflow': 'auto'});
         }
        
     });
-
-
+    $(".search_click_Mask").click(function(){
+        $(".search_click_Mask").removeClass("click_Search_Mask")
+        $(".header").removeClass("js_header--seach")
+        $("#js-search").hide();
+        function removeUnScroll() {
+            $(document).unbind("scroll.unable");
+           
+        }
+        $('html,body').css({'overflow': 'auto'});
+    })
 
 
 

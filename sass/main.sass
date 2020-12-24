@@ -33,9 +33,12 @@
   padding: 60px 0px 60px 0px
   @media (max-width: 740px)
     padding: 120px 0px 60px 0px
-@media (max-width: 740px)
-  .pos_pd_top
-    padding: 120px 0px 0px 0px
+  @media (max-width: 575px)
+    padding: 190px 0px 60px 0px
+// @media (max-width: 740px)
+//   .pos_pd_top
+//     padding: 120px 0px 0px 0px
+
 
 /*-------------------------*/
 /* article
@@ -48,25 +51,19 @@
     margin-bottom: 40px
     nav 
       font-size: 0px
+      margin-left: -15px
+      margin-right: -15px
       .category-title,.category-classify
         display: inline-block
-        margin-right: 30px
+        padding: 4px 15px
+        position: relative
+
         h3
           margin: 0
           color: $color_secondary
           font-size: 16px
           &:hover
             color: $color_primary
-        @media (max-width: 768px)
-          width: 16.66666%
-          margin-right: 0px
-        @media (max-width: 575px)
-          width: 25%
-          margin-right: 0px
-        @media (max-width: 375px)
-          width: 33.333333%
-          margin-right: 0px
-      .grid-block
 
 
   
@@ -83,7 +80,7 @@
   padding: 10px 16px
   font-size: 33px
   cursor: pointer
-  background: rgba($color_dark-grey, 0.5)
+  background: rgba($color_positive, 0.8)
   color: $color_primary
   cursor: pointer
   z-index: 10
@@ -92,7 +89,7 @@
   display: block
 
   span
-    color: $color_primary
+    color: $color_negative
     display: flex
     width: 100%
     height: 100%
@@ -135,12 +132,11 @@
 /*-------------------------*/
 /* $search
 /*-------------------------*/
-form
-  
+
+// search 
+form.header_form_seach
   .container
     max-width: 1200px
-form.header_form_seach
-
   #js-search
     display: none
     background: none
@@ -175,11 +171,12 @@ form.header_form_seach
           font-weight: 400
           letter-spacing: .13px
           font-size: 1.125rem
-          width: 75%
-          border-width: 0
+          width: calc(80% - 46px) 
+          border: 1 solid green
           display: block
           float: left
           margin: 12.5px
+          padding: 0px 10px
           padding-top: 3px
           background-color: $color_light-grey
         .site_search_button
@@ -189,7 +186,73 @@ form.header_form_seach
           float: right
           border: none
           cursor: pointer
-          padding: 16px 15px
+          padding: 15px 15px
+          margin-top: 1px
           .icon-btn
             .icon
               font-size: 1.125rem
+// search
+.search_click_Mask
+  position: fixed
+  width: 100vw
+  height: 100vh
+  z-index: 10
+  background-color: rgba(0, 0, 0, 0.75)
+  left: 0px
+  right: 0px
+  display: none
+  transition: .3s
+
+.search_click_Mask.click_Search_Mask.click_Search_MaskStyle
+  display: block
+  
+
+// form
+.form
+  input
+    &[type="text"], &[type="tel"], &[type="email"]
+      padding: 8px 16px
+      display: inline-block
+      border: 1px solid $color_light-grey
+      border-radius: 4px
+      vertical-align: middle
+      box-sizing: border-box
+      width: 100%
+      margin-bottom: 16px
+      background-color: inherit
+      color: $color_light-grey
+
+  textarea
+    padding: 8px 16px
+    display: inline-block
+    border: 1px solid $color_secondary
+    border-radius: 4px
+    vertical-align: middle
+    box-sizing: border-box
+    width: 100%
+    margin-bottom: 16px
+    background-color: inherit
+    color: $color_light-grey
+    resize: none
+
+  input
+    &[type="text"]:focus, &[type="tel"]:focus, &[type="email"]:focus
+      outline: 0
+      border-width: 1 
+      border: 1px solid $color_primary
+
+  textarea:focus
+    outline: 0
+    border-width: 1 
+    border: 1px solid $color_primary
+
+  label
+    margin-bottom: 8px
+    display: inline-block
+    vertical-align: middle
+    color: $color_light-grey
+
+.form__btn-group
+  margin-top: 32px
+
+ 
