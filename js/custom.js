@@ -46,7 +46,57 @@ $(document).ready(function() {
         $("#js_more_category").css("height","inherit")
         $(this).css("display","none")
     })
+    $("#js-menu-toggle").click(function(){ 
+        $(".js-navbar__nav").toggleClass("js__nav-navbar");
+        if($(".js-navbar__nav").hasClass("js__nav-navbar")){ 
+            function unScroll() {
+                var top = $(document).scrollTop();
+                $(document).on('scroll.unable',function (e) {
+                    $(document).scrollTop(top);
+                })
+            }
+            $('html,body').css({'overflow': 'hidden'});
+        }
+        else{
+            function removeUnScroll() {
+                $(document).unbind("scroll.unable");
+            }
+            $('html,body').css({'overflow': 'auto'});
+        }
+    });
+    $("#js-popup-close").click(function(){ 
+        $(".js-navbar__nav").removeClass("js__nav-navbar");
+        if($(".js-navbar__nav").hasClass("js__nav-navbar")){ 
+            function unScroll() {
+                var top = $(document).scrollTop();
+                $(document).on('scroll.unable',function (e) {
+                    $(document).scrollTop(top);
+                })
+            }
+            $('html,body').css({'overflow': 'hidden'});
+            
 
+
+        }
+        else{
+           
+            function removeUnScroll() {
+                $(document).unbind("scroll.unable");
+            }
+            $('html,body').css({'overflow': 'auto'});
+
+        
+        }
+        $(".search_click_Mask").removeClass("click_Search_Mask")
+        $(".header").removeClass("js_header--seach")
+        $("#js-search").hide();
+        function removeUnScroll() {
+            $(document).unbind("scroll.unable");
+           
+        }
+        $('html,body').css({'overflow': 'auto'});
+    
+    });
 	// logo change when scroll
 	$(window).on('scroll',function(){
 		var scrollDistance = $(window).scrollTop();
