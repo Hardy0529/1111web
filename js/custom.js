@@ -42,7 +42,10 @@ $(document).ready(function() {
         $('html,body').css({'overflow': 'auto'});
     })
 
-
+    $("#js_more_btn").click(function(){
+        $("#js_more_category").css("height","inherit")
+    
+    })
 
 	// logo change when scroll
 	$(window).on('scroll',function(){

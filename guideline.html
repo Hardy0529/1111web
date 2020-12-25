@@ -245,7 +245,7 @@
 			</div>
 			<h5 class="color--secondary"><span class="color--dark-grey">05 </span>02.NAVIGATION BAR</h5>
 			<!-- <div style="background: #1c1c1c; height: 500px;"> -->
-			<header class="header js-header">
+			<header class="header js-header" id="js_headerSearch">
 				<div class="header_row">
 					<div class="container">
 						<div class="navbar u-clearfix">
@@ -262,16 +262,12 @@
 								</div>
 								<div class="menu-toggle_Text">
 									Navigation
-								</div>
-								
+								</div>	
 							</a>
-							
 							<div class="nav u-clearfix">
 								<div id="overlay" class="navbar__nav popup-nav u-clearfix">
 									<ul class="menu nav__menu u-clearfix">
-							
-										<li><a href="" class="menu__item">PRODUCTS</a></li>
-
+										<li><a href="" class="menu__item">找工作</a></li>
 									</ul>
 									
 									<a href="#!" class="popup-close">
@@ -279,13 +275,17 @@
 										<span></span>
 									</a>
 								</div>
-								<a href="#" class="nav__icon-group">
-									<div class="icon-btn">
-										<i class="icon fa fa-search" aria-hidden="true"></i>
+								<a href="#!" class="nav__icon-group">
+									<div id="icon-btn_search">
+										<div class="icon-btn">
+											<i class="icon fa fa-search" aria-hidden="true"></i>
+										
+										</div>
+										<div class="icon-btn_Text">
+											Search
+										</div>
 									</div>
-									<div class="icon-btn_Text">
-										Search
-									</div>
+									
 								</a>
 		
 							</div>
@@ -294,12 +294,24 @@
 							
 					</div>
 				</div>
-				
-				<form action="">
-					<div class="site_search_row">
-						
-					</div>
+				<form action="" class="header_form_seach form" id="js-search"> 
+					<div class="container ">
+						<div class="site_search_row u-clearfix"  >
+							<div class="site_search_cell">
+								<div class="site_search_fieldset u-clearfix">
+										<input class="site_search_input" type="text" id="searchIcon" name="" placeholder="Search..." value="">
+	
+									<button class="site_search_button" type="">
+										<div class="icon-btn">
+											<i class="icon fa fa-search"></i>
+										</div>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>	
 				</form>
+				<div class="search_click_Mask"></div>
 			</header>	
 			<!-- </div> -->
 			
