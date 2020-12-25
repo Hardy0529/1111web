@@ -44,7 +44,7 @@ $(document).ready(function() {
 
     $("#js_more_btn").click(function(){
         $("#js_more_category").css("height","inherit")
-    
+        $(this).css("display","none")
     })
 
 	// logo change when scroll
