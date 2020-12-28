@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    
     $("#js-search").hide();
     $("#icon-btn_search").click(function(){
         $(".header").toggleClass("js_header--seach");
@@ -129,7 +130,9 @@ $(document).ready(function() {
 
   
 
-
+    document.documentElement.addEventListener('touchmove', function (event) { 
+        event.preventDefault(); 
+    }, false); 
 
 
 });
