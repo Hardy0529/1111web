@@ -101,17 +101,26 @@ $(document).ready(function() {
         // Seach input 點擊禁止滾動
         // 當 input 是 focus 的狀態下
         $("#js-input").focus(function(){
-            var top = $(document).scrollTop();
-            $(document).on('scroll.unable',function (e) {
-                $(document).scrollTop(top);
-     
-            })
-       
-           
+			// 找到 .label-text 元素並加上 .is-active
             $(this).css("background","#cccccc")
-        })
-
-
+            $(this).addClass("js-input-focus")
+            if($("#js-input").hasClass("js-input-focus")){ 
+                function unScroll() {
+                    var top = $(document).scrollTop();
+                    $(document).on('scroll.unable',function (e) {
+                        $(document).scrollTop(top);
+                    })
+                }
+                $('html,body').css({'overflow': 'hidden'});
+        
+                
+            }
+		})
+		// 當 input 是 blur 的狀態下
+        $("#js-input").blur(function(){
+			// 如果裡面沒有內容
+		
+		})
 
     // 文章專區更多分類展開
     $("#js_more_btn").click(function(){
