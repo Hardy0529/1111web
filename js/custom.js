@@ -101,14 +101,10 @@ $(document).ready(function() {
         // Seach input 點擊禁止滾動
         // 當 input 是 focus 的狀態下
         $("#js-input").focus(function(){
-            function unScroll() {
-                var top = $(document).scrollTop();
-                $(document).on('scroll.unable',function (e) {
-                    $(document).scrollTop(top);
-                })
-            }
+            $('html,body').css({'height': '100%'});
             $('html,body').css({'overflow': 'hidden'});
-            $(this).css("background","red")
+           
+            $(this).css("background","yellow")
         })
 
 
