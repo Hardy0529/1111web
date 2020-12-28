@@ -100,22 +100,13 @@ $(document).ready(function() {
 
         // Seach input 點擊禁止滾動
         $("#js-input").focus(function(){
-            $(".js-navbar__nav").toggleClass("js__nav-navbar");
-            if($(".js-navbar__nav").hasClass("js__nav-navbar")){ 
-                function unScroll() {
-                    var top = $(document).scrollTop();
-                    $(document).on('scroll.unable',function (e) {
-                        $(document).scrollTop(top);
-                    })
-                }
-                $('html,body').css({'overflow': 'hidden'});
+            function unScroll() {
+                var top = $(document).scrollTop();
+                $(document).on('scroll.unable',function (e) {
+                    $(document).scrollTop(top);
+                })
             }
-            else{
-                function removeUnScroll() {
-                    $(document).unbind("scroll.unable");
-                }
-                $('html,body').css({'overflow': 'auto'});
-            }
+            $('html,body').css({'overflow': 'hidden'});
 		})
         
 
