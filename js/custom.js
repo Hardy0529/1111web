@@ -121,7 +121,7 @@ $(document).ready(function() {
         // Seach input 點擊禁止滾動
         // 當 input 是 focus 的狀態下
         $("#js-input").focus(function(){
-            $(this).css("background","yellow")
+            $(this).css("background","blue")
             $(this).addClass("js-input-focus")
            
             if($("#js-input").hasClass("js-input-focus")){ 
