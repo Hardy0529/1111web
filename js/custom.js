@@ -10,6 +10,7 @@ $(document).ready(function() {
     });
     // Search Icon 點擊後禁止滾動
     $("#icon-btn_search").click(function(){ 
+        $("#js-input").removeClass("js-input-focus")
         $(".search_click_Mask").toggleClass("click_Search_Mask");
         if($(".search_click_Mask").hasClass("click_Search_Mask")){ 
             $(".search_click_Mask").addClass("click_Search_MaskStyle")
@@ -32,6 +33,7 @@ $(document).ready(function() {
     });
         // Menu Toggle 展開後禁止滾動 
         $("#js-menu-toggle").click(function(){ 
+            $("#js-input").removeClass("js-input-focus")
             $(".js-navbar__nav").toggleClass("js__nav-navbar");
             if($(".js-navbar__nav").hasClass("js__nav-navbar")){ 
                 function unScroll() {
@@ -51,6 +53,7 @@ $(document).ready(function() {
         });
         // popup 展開後禁止滾動
         $(".search_click_Mask").click(function(){
+            $("#js-input").removeClass("js-input-focus")
             $(".search_click_Mask").removeClass("click_Search_Mask")
             $(".header").removeClass("js_header--seach")
             $("#js-search").hide();
@@ -65,6 +68,7 @@ $(document).ready(function() {
     
         // Menu popup close 恢復滾動
         $("#js-popup-close").click(function(){ 
+            $("#js-input").removeClass("js-input-focus")
             $(".js-navbar__nav").removeClass("js__nav-navbar");
             if($(".js-navbar__nav").hasClass("js__nav-navbar")){ 
                 function unScroll() {
@@ -101,19 +105,26 @@ $(document).ready(function() {
         // Seach input 點擊禁止滾動
         // 當 input 是 focus 的狀態下
         $("#js-input").focus(function(){
-			// 找到 .label-text 元素並加上 .is-active
-            $(this).css("background","#cccccc")
+            $(this).css("background","orange")
             $(this).addClass("js-input-focus")
+         
             if($("#js-input").hasClass("js-input-focus")){ 
-                function unScroll() {
+               
                     var top = $(document).scrollTop();
                     $(document).on('scroll.unable',function (e) {
                         $(document).scrollTop(top);
                     })
-                }
+               
                 $('html,body').css({'overflow': 'hidden'});
         
                 
+            }
+            else{
+                function removeUnScroll() {
+                    $(document).unbind("scroll.unable");
+                   
+                }
+                $('html,body').css({'overflow': 'auto'});
             }
 		})
 		// 當 input 是 blur 的狀態下
