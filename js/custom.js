@@ -70,6 +70,7 @@ $(document).ready(function() {
     $("#js_more_btn").click(function(){
         $("#js_more_category").css("height","inherit")
         $(this).css("display","none")
+        $("#btn_category").css("padding-top","0px")
     })
     $("#js-menu-toggle").click(function(){ 
         $(".js-navbar__nav").toggleClass("js__nav-navbar");
