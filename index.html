@@ -4,27 +4,7 @@
     <meta charset="UTF-8">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
-	<script>
-		    // 縮放 IOS
-			window.onload=function () {
-        document.addEventListener('touchstart',function (event) {
-        if(event.touches.length>1){
-        event.preventDefault();
-        }
-        });
-        var lastTouchEnd=0;
-        document.addEventListener('touchend',function (event) {
-        var now=(new Date()).getTime();
-        if(now-lastTouchEnd<=300){
-        event.preventDefault();
-        }
-        lastTouchEnd=now;
-        },false);
-        document.addEventListener('gesturestart', function (event) {
-        event.preventDefault();
-        });
-        }
-	</script>
+
     <title>職點</title>
 	<link rel="stylesheet" href="dist/style/main.min.css">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
@@ -56,7 +36,7 @@
 						<div class="nav u-clearfix">
 							<div id="overlay" class="navbar__nav popup-nav js-navbar__nav u-clearfix">
 								<ul class="menu nav__menu u-clearfix">
-									<li><a href="" class="menu__item">找工作2</a></li>
+									<li><a href="" class="menu__item">找工作</a></li>
 								</ul>
 								
 								<a href="#!" class="popup-close" id="js-popup-close">
@@ -115,20 +95,20 @@
 
 
 		<!-- Start jumbotron -->
-		<div class="jumbotron jumbotron--img-covered">
+		<div class="jumbotron jumbotron--img-covered" style="background-image: url(images/jumbotron_bg.jpg);">
 			<!-- <a href="#" class="banner_content_link"> -->
 				<div class="banner__container">
 					<div class="banner__content">
 						<a href="#">
-							<h2 class="banner__content__title">Mathew Cerletty's Objects Are Closer Than They Appear</h2>
+							<h2 class="banner__content__title">2021年勞健保、勞退負擔費用如何算？一張表告訴你2021年勞健保、勞退負擔</h2>
 						</a>
 						
 						<a href="#" class="banner__content__dek">
-							The paintings in his solo show at The Power Station reveal a part of ourselves in the quotidian.
+							2021年基本工資每月將調漲為24,000元、每小時將調漲為160元，因應基本工資調整2021年基本工資每月將調漲為24,000元、每小時將調漲為160元，因應基本工資調整
 						</a>
 						<a href="#" class="banner_tag_list">
 							<div class="banner_tag">
-								Haley Mellin
+								履歷自傳
 							</div>
 						</a>
 					</div>
@@ -468,7 +448,7 @@
 
 		<!-- JS -->
 		<script src="js/jquery-3.2.1.min.js"></script>
-	
+		
 		<script src="js/custom.js"></script>
 
 </body>
