@@ -29,43 +29,17 @@
 .givePadding
   padding: 60px 0px 60px 0px
 
-.position_pd_top
-  padding: 6px 0px 60px 0px
+.article-pt_top
+  padding: 0px 0px 60px 0px
   @media (max-width: 740px)
-    padding: 120px 0px 60px 0px
-  @media (max-width: 575px)
-    padding: 190px 0px 60px 0px
-// @media (max-width: 740px)
-//   .pos_pd_top
-//     padding: 120px 0px 0px 0px
+    padding: 40px 0px 60px 0px
+ 
 
 
 /*-------------------------*/
 /* article
 /*-------------------------*/
-// .article
-//   .subtitle
-//     color: $color_secondary
-//   .class-nav 
-//     margin-top: 60px
-//     margin-bottom: 40px
-//     nav 
-//       font-size: 0px
-//       margin-left: -15px
-//       margin-right: -15px
-//       @media screen and ( max-width:  )
-        
-//       .category-title,.category-classify
-//         display: inline-block
-//         padding: 4px 15px
-//         position: relative
 
-//         h3
-//           margin: 0
-//           color: $color_secondary
-//           font-size: 16px
-//           &:hover
-//             color: $color_primary
 
 .article
   .subtitle
@@ -88,7 +62,7 @@
       @media screen and ( max-width:  660px)
         height: 48px
         overflow: hidden
-        
+     
       .category-title,.category-classify
         display: inline-block
         padding: 4px 15px
@@ -346,28 +320,16 @@ form.header_form_seach
 
 .header-tag 
   background-color: $color_secondary
-  background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.25) 100%)
   box-sizing: border-box
   color: $color_light-grey
   margin-bottom: 80px
   overflow: hidden
-  padding: 3rem 25%
+  padding: 3rem 0 2rem 0
   position: relative
-  left: -25%
-  width: 150%
+  
+  width: 100%
   transition: all .25s ease-in-out  
-  &::before
-    background-image: linear-gradient(115deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.05) 50%, rgba(255,255,255,0) 50%),linear-gradient(to left, #00356b 0%,#0c549c 100%)
-    content: ""
-    opacity: 0
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-    transition: all .25s ease-in-out
-  &:hover:before 
-    opacity: 1
+ 
   
   & h1 
     font-weight: 500

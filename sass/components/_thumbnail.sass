@@ -75,6 +75,7 @@
   border-radius: 4px
   // overflow: hidden
 .thumbnail__class
+  // style1
   // font-size: 14px
   // display: inline-block
   // padding: 10px 0px
@@ -88,26 +89,27 @@
   // height: 60px
   // border-radius: 50%
   // box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px
+  // style2
   display: block
   padding: 8px 14px
   position: absolute
-  right: -14px
+  left: -8px
   top: 20px
   background-color: darkblue
   color: dodgerblue
-  border-top-right-radius: 7px
+  border-top-left-radius: 7px
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3)
   z-index: 1
   &::after
     display: block
     content: ""
-    height: 14px
-    width: 14px
+    height: 8px
+    width: 8px
     position: absolute
     background-color: dodgerblue
-    right: 0
-    bottom: -14px
-    border-bottom-right-radius: 14px
+    left: 0
+    bottom: -8px
+    border-bottom-left-radius: 8px
   span
     color: #ffffff
   //   top: 50%
@@ -130,13 +132,13 @@
   margin-bottom: 8px
   color: $color_black
   +ellipsis-multi(2)
-  height: 68px
+  // height: 68px
 .thumbnail__preview
 
   overflow: hidden
   margin-bottom: 8px
   color: rgba($color_secondary , 0.7) 
-  height: 48px
+  // height: 48px
   +ellipsis-multi(2)
   
 .thumbnail__date

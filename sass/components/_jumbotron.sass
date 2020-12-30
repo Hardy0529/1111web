@@ -6,8 +6,10 @@
 .jumbotron
   background-color: $color_default
   height: 92vh
+  @media (max-width: 1200px)
+    height: 65vh
   @media (max-width: 1024px)
-    height: 55vh
+    height: 60vh
   @media (max-width: 768px)
     height: 55vh
   @media (max-width: 740px)
@@ -52,38 +54,51 @@
   display: block
   .banner__content
     z-index: 1
-    position: absolute
-    left: 0px
-    bottom: 30px
-    padding: 80px
-    width: 83.333333%
-    max-width: 1100px
-    @media (max-width: 960px)
-      bottom: 0px
-      background: $color_white
-      padding: 40px
-      border-top: 3px solid $color_primary
-    @media (max-width: 740px)
+    // position: absolute
+    // left: 0px
+    // bottom: 30px
+    // padding: 110px 0px 0px 0px
+    // width: 83.333333%
+    // max-width: 1100px
+    width: calc( 100% - 30px )
+    margin-top: -190px
+    left: 50%
+    transform: translate(-50%)
+    background: $color_white
+    padding: 40px
+    border-top: 3px solid $color_primary
+      
+    @media (min-width: 576px)
       left: 50%
       transform: translate(-50%)
-      bottom: -90px
+      width: 85%
+      max-width: 1100px
+    @media (min-width: 741px)
+      position: absolute
+      left: 0px
+      bottom: 0px
+      transform: translate(0px)
       padding: 40px 20px
-      
-    @media (max-width: 575px)
-      bottom: -160px
-      width: calc( 100% - 30px )
+    @media (min-width: 960px)
+      padding: 60px 20px
+    // @media (max-width: 960px)
+     
+    //   background: $color_white
+    //   padding: 40px
+    //   border-top: 3px solid $color_primary
+    
     .banner__content__title
      
       margin: 0px
-      color: $color_white
+      color: $color_black
       font-weight: 500
       line-height: 1.1
       font-size: 42px
       margin-bottom: 25px
       font-family: $title_font
-      +ellipsis-multi(3)
-      @media (min-width: 961px)
-        text-shadow: $color_black 0.1em 0.1em 0.2em
+      // +ellipsis-multi(3)
+      // @media (min-width: 961px)
+      //   text-shadow: $color_black 0.1em 0.1em 0.2em
       @media (max-width: 960px)
         font-size: 35px
         color: $color_black
@@ -92,21 +107,21 @@
         color: $color_primary
         
     .banner__content__dek
-      +ellipsis-multi(2)
-      color: $color_white
+      // +ellipsis-multi(2)
+      color: rgba($color_black , 0.7)
       font-size: 1.25rem
       line-height: 1.5
       margin-bottom: 15px
       font-family: $main_font
-      @media (min-width: 961px)
-        text-shadow: $color_black 0.1em 0.1em 0.1em
+      // @media (min-width: 961px)
+      //   text-shadow: $color_black 0.1em 0.1em 0.1em
       @media (max-width: 960px)
         color: rgba($color_black , 0.7)
     .banner_tag_list
       .banner_tag
         text-transform: uppercase
-        color: $color_white
-        @media (min-width: 961px)
-          text-shadow: $color_black 0.1em 0.1em 0.1em
+        color: $color_black
+        // @media (min-width: 961px)
+        //   text-shadow: $color_black 0.1em 0.1em 0.1em
         @media (max-width: 960px)
           color: $color_black
