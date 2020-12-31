@@ -1,0 +1,57 @@
+
+/*-------------------------*/
+/* $form
+/*-------------------------*/
+
+
+// form
+.form
+  input
+    &[type="text"], &[type="tel"], &[type="email"]
+      -webkit-appearance: none
+      padding: 8px 16px
+      display: inline-block
+      border: 1px solid $color_light-grey
+      border-radius: 4px
+      vertical-align: middle
+      box-sizing: border-box
+      width: 100%
+      margin-bottom: 16px
+      background-color: inherit
+      color: $color_black
+
+  textarea
+    -webkit-appearance: none
+    padding: 8px 16px
+    display: inline-block
+    border: 1px solid $color_secondary
+    border-radius: 4px
+    vertical-align: middle
+    box-sizing: border-box
+    width: 100%
+    margin-bottom: 16px
+    background-color: inherit
+    color: $color_black
+    resize: none
+    
+  input
+    &[type="text"]:focus, &[type="tel"]:focus, &[type="email"]:focus
+      outline: 0
+      border-width: 1 
+      border: 1px solid $color_primary
+
+  textarea:focus
+    outline: 0
+    border-width: 1 
+    border: 1px solid $color_primary
+
+  label
+    margin-bottom: 8px
+    display: inline-block
+    vertical-align: middle
+    color: $color_light-grey
+
+.form__btn-group
+  margin-top: 32px
+
+ 
