@@ -1,7 +1,56 @@
 $(document).ready(function() {
-    // 禁止縮放
+    // Loading
+    var percent = 0
 
-    // 縮放 IOS
+    var timerfire = setInterval(function(){
+        $(".bar").css("width",percent+"%")
+            percent+=1
+            if (percent>=20){
+                $(".loading-icon").addClass("complete_fire")
+                
+                clearInterval(timerfire)
+                $(".pageLoading").addClass("loading_light")
+            }
+        },30)
+
+    var timer = setInterval(function(){
+    $(".bar").css("width",percent+"%")
+        percent+=1
+        if (percent>=100){
+            $(".pageLoading").removeClass("pageLoading_noscroll")
+            $(".pageLoading").addClass("complete")
+            clearInterval(timer)
+        }
+        // 調整大小
+        if ($(".pageLoading").hasClass("pageLoading_noscroll")) {
+        
+            function unScroll() {
+                var top = $(document).scrollTop();
+                $(document).on('scroll.unable', function(e) {
+                    $(document).scrollTop(top);
+                })
+            }
+            $('html,body').css({
+                'overflow': 'hidden'
+            });
+        } else {
+            function removeUnScroll() {
+                $(document).unbind("scroll.unable");
+
+            }
+            $('html,body').css({
+                'overflow': 'auto'
+            });
+        }
+    },30)
+
+    
+
+
+
+
+
+    // 禁止縮放 IOS
     window.onload = function() {
         document.addEventListener('touchstart', function(event) {
             if (event.touches.length > 1) {
@@ -21,8 +70,45 @@ $(document).ready(function() {
         });
     }
 
+    window.addEventListener(
+        "touchmove",
+        function(event) {
+            if(event.scale !== 1) {
+                event.preventDefault();
+            }
+        }, {
+            passive: false
+        }
+    );
 
 
+    $(window).scroll(function(){
+
+        //获取滚动条滚动的位置
+        
+        var top = $(window).scrollTop();
+        
+        if(top > 100){
+        
+        alert("滚动条滚动大于100显示弹出框")
+        
+        }
+
+        window.addEventListener(
+            "touchmove",
+            function(event) {
+                if(event.scale !== 1) {
+                    event.preventDefault();
+                }
+            }, {
+                passive: false
+            }
+        );
+        
+    })
+
+
+  
 
     $("#js-search").hide();
     $("#icon-btn_search").click(function() {
