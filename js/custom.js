@@ -83,16 +83,23 @@ $(document).ready(function() {
 
 
     $(window).scroll(function(){
-
-        //获取滚动条滚动的位置
-        
-        var top = $(window).scrollTop();
-        
-        if(top > 100){
-        
-        alert("滚动条滚动大于100显示弹出框")
-        
-        }
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        });
+        var lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            var now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        document.addEventListener('gesturestart', function(event) {
+            event.preventDefault();
+        });
+       
 
         window.addEventListener(
             "touchmove",
