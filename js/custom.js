@@ -2,13 +2,11 @@ $(document).ready(function() {
     // Loading
     var percent = 0
 
-    var timerfire = setInterval(function(){
+    var timer_light = setInterval(function(){
         $(".bar").css("width",percent+"%")
             percent+=1
-            if (percent>=20){
-                $(".loading-icon").addClass("complete_fire")
-                
-                clearInterval(timerfire)
+            if (percent>=5){
+                clearInterval(timer_light)
                 $(".pageLoading").addClass("loading_light")
             }
         },30)

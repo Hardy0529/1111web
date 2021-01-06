@@ -22,11 +22,13 @@
       padding: 6px 0px
 
 .navbar__logo
-  width: 150px
+  width: 220px
+  padding: 5px 0px
   display: block
   margin-right: auto
   margin-left: auto
-  transition: all 0.3s
+  transition: all 0.8s
+  padding-bottom: 0px
   // 圖片
   // background: url('images/logo.png') 
   // background-repeat: no-repeat
@@ -41,29 +43,35 @@
     text-align: center
     color: $color_white
     font-size: 2.5rem
-    line-height: 80px
     font-weight: 400
     letter-spacing: -0.02em
     @media (max-width: 960px)
       line-height: 50px
     svg
       padding-top: 15px
-      width: 150px 
+      width: 210px
       @media (max-width: 960px)
         width: 140px 
         padding-top: 10px
       .cls-1
         fill: $color_white
-     
+      .cls-2
+        fill: $color_white
+      .cls-3
+        fill: $color_white
 .header
   &.js_header--seach
     background: $color_light-grey
     .navbar__logo
       h1
         color: $color_primary
-        svg
-          .cls-1
-            fill: $color_primary
+        // svg
+        //   .cls-1
+        //     fill: $color_primary
+        //   .cls-2
+        //     fill: #a42025
+        //   .cls-3
+        //     fill: #071f38
     .nav__menu 
       @media (min-width: 961px)
         .menu__item
@@ -89,17 +97,24 @@
       h1
         color: $color_primary
         svg
+          padding-top: 5px
+          width: 175px
+          transition: 0.3s
           .cls-1
-            fill: $color_primary
+            fill: $color_secondary
+          .cls-2
+            fill: #a42025
+          .cls-3
+            fill: $color_black
     .nav__menu 
       @media (min-width: 961px)
         .menu__item
-          color: $color_primary
+          color: $color_secondary
     .nav__icon-group 
       .icon-btn 
         @media (min-width: 961px)
           .icon
-             color: $color_primary
+             color: $color_secondary
     @media (max-width: 960px)
       .nav__icon-group 
         border: 1px solid #999a94

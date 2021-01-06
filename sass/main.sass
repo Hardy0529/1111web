@@ -53,9 +53,12 @@
   background-color: $color_secondary
   flex-direction: column
   transition: opacity 0.5s 0.5s
+.pageLoading_logo
+  transform: scale(0.6)
+  margin-bottom: -50px
 .pageLoading.loading_light
   transition: all 1.5s
-  background-color: $color_grey
+  background-color: $color_white
   transition-delay: 0.2s
 .pageLoading.complete 
   opacity: 0
@@ -68,33 +71,156 @@
   background-color: #fff
   overflow: hidden
   transition: 0.5s
-
   .bar
     background-color: $color_primary
     width: 0%
     height: 100%
-
-.loading-icon
-  width: 160px
-  margin-bottom: -25px
-  // padding-bottom: 20px
-  .complete_fire_img
+.logo_people
+    position: absolute
+    top: -15px
+    z-index: 1
+    left: calc(50% - 10px)
+    transform: translateX(-50%)
     opacity: 0
-    visibility: hidden
-  img
-      width: 100%
+    -webkit-animation: logo_people_animate 2.5s  forwards
+    animation: logo_people_animate 2.5s  forwards
+    animation-delay: 1.2s
+    img
+      width: 135px
+@-webkit-keyframes logo_people_animate
+  100%
+   opacity: 1
+@keyframes logo_people_animate
+  100%
+    opacity: 1
+.loading-icon
+  width: 230px
+  font-size: 0px
+  height: 230px
+  overflow: hidden
+  position: relative
+  border-radius: 0%
+  border: 10px solid rgba( #071f38 ,0 )
+  -webkit-animation: logo_circle 2.5s  forwards
+  animation: logo_circle 2.5s  forwards
+  animation-delay: 1s
+  >span
+    max-height: 140px
+    font-size: inherit 
+    position: absolute
+    display: inline-block
+    text-align: center
+    line-height: 0px
+    bottom: -40px
+    &:nth-child(1)
+      left: 35px
+      -webkit-animation: stair1 0.8s  both
+      animation: stair1 0.8s  forwards
+      animation-delay: 1.4s
+    &:nth-child(2)
+      left: 72px
+      -webkit-animation: stair1 0.8s  both
+      animation: stair2 0.8s  forwards
+      animation-delay: 1.5s
+    &:nth-child(3)
+      left: 109px 
+      -webkit-animation: stair1 0.8s  both
+      animation: stair3 0.8s  forwards
+      animation-delay: 1.6s
+    &:nth-child(4)
+      left: 146px 
+      -webkit-animation: stair1 0.8s  forwards
+      animation: stair4 0.8s  forwards
+      animation-delay: 1.7s
+    img
+      width: 30px
+@-webkit-keyframes logo_circle
+  20%
+    border-radius: 50%
+  50%
+    border: 10px solid rgba( #071f38 ,0.9 )
+    border-radius: 50%
+  100%
+    border: 10px solid rgba( #071f38 ,1 )
+    border-radius: 50%
+@keyframes logo_circle
+  20%
+    border-radius: 50%
+  50%
+    border: 10px solid rgba( $color_primary ,0.9 )
+    border-radius: 50%
+  100%
+    border: 10px solid rgba( $color_primary ,1 )
+    border-radius: 50%
+@-webkit-keyframes stair1
+  0%
+    bottom: -40px
+  50%
+    bottom: -110px
+  100%
+    bottom: -80px
+@keyframes stair1
+  0%
+    bottom: -40px
+  50%
+    bottom: -110px
+  100%
+    bottom: -80px
+@-webkit-keyframes stair2
+  0%
+    bottom: -40px
+  50%
+    bottom: -80px
+  100%
+    bottom: -50px
+@keyframes stair2
+  0%
+    bottom: -40px
+  50%
+   bottom: -80px
+  100%
+    bottom: -50px
+@-webkit-keyframes stair3
+  0%
+    bottom: -40px
+  50%
+    bottom: -50px
+   
+  100%
+    bottom: -20px
+@keyframes stair3
+  0%
+    bottom: -40px
+  50%
+    bottom: -50px
+
+  100%
+    bottom: -20px
+
+@-webkit-keyframes stair4
+  0%
+    bottom: -40px
+  50%
+    bottom: -20px
+   
+  100%
+    bottom: 10px
+@keyframes stair4
+  0%
+    bottom: -40px
+  50%
+    bottom: -20px
+  100%
+    bottom: 10px
+
+
 .pageLoading.complete 
   .loading-icon
     display: none
 
-.loading-icon.complete_fire
-    .complete_fire_img
-      transition: 1.5s
-      opacity: 1
-      visibility: visible
+
 .LoadingImg
   width: 250px
-  // background-color: $color_primary
   border-radius: 20px
   cursor: pointer
   margin: 10px
@@ -102,38 +228,20 @@
   justify-content: center
   align-items: center
   flex-direction: column
-  // box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2)
   position: relative
-  // -webkit-animation: jumping 0.8s infinite alternate
-  // animation: jumping 0.8s infinite alternate
   transition: 0.5s
   img
     width: 100%
 .pageLoading.complete .LoadingImg
   transform: scale(0.01) rotate(360deg)
-@-webkit-keyframes jumping
-  50%
-    top: 0
-    // box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2)
-
-  100%
-    top: -50px
-    // box-shadow: 0px 120px 50px rgba(0, 0, 0, 0.2)
-
-@keyframes jumping
-  50%
-    top: 0
-    // box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2)
-
-  100%
-    top: -50px
-    // box-shadow: 0px 120px 50px rgba(0, 0, 0, 0.2)
 
 .pageLoading_text
   position: absolute
-  bottom: 18px
-  transform: rotate(-3deg)
+  bottom: 10px
+  transform: rotate(-2deg)
   span
+    font-weight: bold
+    font-size: 14px
     &:nth-child(1)
       opacity: 0
       visibility: visible
