@@ -7802,6 +7802,7 @@ html {
 
 @media (max-width: 960px) {
   .navbar__logo {
+    width: inherit;
     display: inline-block;
     float: left;
   }
@@ -8413,7 +8414,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 .banner__container .banner__content {
   z-index: 1;
   width: calc( 100% - 30px);
-  margin-top: -190px;
+  margin-top: -280px;
   left: 50%;
   -webkit-transform: translate(-50%);
           transform: translate(-50%);
