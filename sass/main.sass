@@ -388,8 +388,23 @@
     width: 100%
     z-index: 10
     transition: .5s
+    padding: 0
+    .header-tag_pc
+      @media screen and ( max-width:  767px)
+        display: none
+    .header-tag_Mobile
+      display: none
+      @media screen and ( max-width:  767px)
+        display: block
+        
+
     @media screen and ( max-width:  767px)
       top: 58px
+      padding-top: 8px
+      padding-bottom: 8px
+    .class-nav
+      border-top: none
+      margin-bottom: 10px
   .header-tag 
     background-color: $color_secondary
     box-sizing: border-box
@@ -400,7 +415,25 @@
     position: relative
     width: 100%
     transition: all .25s ease-in-out  
-   
+    .header-tag_pc
+      display: block
+    .header-tag_Mobile
+      display: none
+      margin-right: 15px
+      margin-left: 15px
+      select
+        font-size: 20px
+        text-align: center
+        background: #43484c
+        color: $color_white
+        border: 1px solid $color_light-grey
+        outline: 0
+        border-radius: 0px
+        width: 100%
+
+        padding: 15px 15px
+        -webkit-appearance: none
+        appearance: none
     & h1 
       font-weight: 500
       font-size: 3em
@@ -476,6 +509,8 @@
     @media screen and ( max-width:  660px)
       .btn_category
         padding-top: 20px
+        @media screen and ( max-width:  767px)
+          padding-top: 0px
     .btn
       display: none
       @media screen and ( max-width:  660px)
