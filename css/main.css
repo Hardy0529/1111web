@@ -9306,6 +9306,22 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 /*-------------------------*/
 /* article */
 /*-------------------------*/
+.article .header-tag.fixed-header {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  -webkit-transition: .5s;
+  transition: .5s;
+}
+
+@media screen and (max-width: 767px) {
+  .article .header-tag.fixed-header {
+    top: 58px;
+  }
+}
+
 .article .header-tag {
   background-color: #43484c;
   -webkit-box-sizing: border-box;

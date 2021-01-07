@@ -1,4 +1,18 @@
 $(document).ready(function() {
+
+
+    $(window).scroll(function(){
+        var jumbotronHeight = $(".jumbotron_height").height()
+        if ($(window).scrollTop() >= jumbotronHeight) {
+            $('.header-tag').addClass('fixed-header');
+        }
+        else {
+            $('.header-tag').removeClass('fixed-header');
+        }
+    });
+
+
+
     // Loading
     var percent = 0
 
