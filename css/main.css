@@ -7792,24 +7792,9 @@ html {
   padding: 0px;
 }
 
-@media (max-width: 960px) {
-  .header .navbar {
-    padding: 15px 0px;
-  }
-}
-
-@media (max-width: 767px) {
-  .header .navbar {
-    padding: 6px 0px;
-  }
-}
-
 .navbar__logo {
   width: 220px;
-  padding: 5px 0px;
   display: block;
-  margin-right: auto;
-  margin-left: auto;
   -webkit-transition: all 0.8s;
   transition: all 0.8s;
   padding-bottom: 0px;
@@ -7822,7 +7807,8 @@ html {
   }
 }
 
-.navbar__logo h1 {
+.navbar__logo h1.logo {
+  width: 210px;
   margin: 0px;
   padding: 0px;
   text-align: center;
@@ -7832,22 +7818,25 @@ html {
   letter-spacing: -0.02em;
 }
 
-@media (max-width: 960px) {
-  .navbar__logo h1 {
-    line-height: 50px;
+.navbar__logo h1.logo_Mobile {
+  width: 178.23px;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 767px) {
+  .navbar__logo h1.logo_Mobile {
+    width: 140px;
   }
 }
 
 .navbar__logo h1 svg {
   padding-top: 15px;
-  width: 210px;
-}
-
-@media (max-width: 960px) {
-  .navbar__logo h1 svg {
-    width: 140px;
-    padding-top: 10px;
-  }
 }
 
 .navbar__logo h1 svg .cls-1 {
@@ -7862,12 +7851,34 @@ html {
   fill: #fff;
 }
 
-.header.js_header--seach {
-  background: #f4f4f4;
+@media (max-width: 767px) {
+  .navbar__logo h1 svg {
+    padding-top: 8px;
+  }
 }
 
-.header.js_header--seach .navbar__logo h1 {
-  color: #00356b;
+.navbar__logo .logo {
+  display: block;
+}
+
+@media (max-width: 960px) {
+  .navbar__logo .logo {
+    display: none;
+  }
+}
+
+.navbar__logo .logo_Mobile {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .navbar__logo .logo_Mobile {
+    display: block;
+  }
+}
+
+.header.js_header--seach {
+  background: #f4f4f4;
 }
 
 @media (min-width: 961px) {
@@ -7901,27 +7912,57 @@ html {
           box-shadow: 0 3px 5px rgba(53, 54, 48, 0.1);
 }
 
-.header.header--scrolling .navbar__logo h1 {
+.header.header--scrolling .navbar__logo h1.logo {
   color: #00356b;
 }
 
-.header.header--scrolling .navbar__logo h1 svg {
-  padding-top: 5px;
-  width: 175px;
+.header.header--scrolling .navbar__logo h1.logo svg {
+  padding-top: 10px;
+  width: 178.23px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
 
-.header.header--scrolling .navbar__logo h1 svg .cls-1 {
+.header.header--scrolling .navbar__logo h1.logo svg .cls-1 {
   fill: #43484c;
 }
 
-.header.header--scrolling .navbar__logo h1 svg .cls-2 {
+.header.header--scrolling .navbar__logo h1.logo svg .cls-2 {
   fill: #a42025;
 }
 
-.header.header--scrolling .navbar__logo h1 svg .cls-3 {
+.header.header--scrolling .navbar__logo h1.logo svg .cls-3 {
   fill: #353630;
+}
+
+.header.header--scrolling .navbar__logo h1.logo_Mobile {
+  color: #00356b;
+}
+
+.header.header--scrolling .navbar__logo h1.logo_Mobile svg {
+  padding-top: 15px;
+  width: 178.23px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+@media (max-width: 767px) {
+  .header.header--scrolling .navbar__logo h1.logo_Mobile svg {
+    padding-top: 8px;
+    width: 140px;
+  }
+}
+
+.header.header--scrolling .navbar__logo h1.logo_Mobile svg .cls-1 {
+  fill: #a42025;
+}
+
+.header.header--scrolling .navbar__logo h1.logo_Mobile svg .cls-2 {
+  fill: #353630;
+}
+
+.header.header--scrolling .navbar__logo h1.logo_Mobile svg .cls-3 {
+  fill: #43484c;
 }
 
 @media (min-width: 961px) {
@@ -7957,8 +7998,17 @@ html {
 
 @media (max-width: 960px) {
   .nav {
+    margin-top: 15px;
+    margin-bottom: 15px;
     position: static;
     float: right;
+  }
+}
+
+@media (max-width: 767px) {
+  .nav {
+    margin-top: 4px;
+    margin-bottom: 4px;
   }
 }
 
@@ -8070,6 +8120,20 @@ html {
   float: right;
   margin-left: 10px;
   background: #00356b;
+}
+
+@media (max-width: 960px) {
+  .menu-toggle {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 767px) {
+  .menu-toggle {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
 }
 
 .menu-toggle .menu-toggle_Icon {

@@ -14,19 +14,10 @@
   ul
     margin: 0px
     padding: 0px
-  @media (max-width: 960px)
-    .navbar
-      padding: 15px 0px
-  @media (max-width: 767px)
-    .navbar
-      padding: 6px 0px
 
 .navbar__logo
   width: 220px
-  padding: 5px 0px
   display: block
-  margin-right: auto
-  margin-left: auto
   transition: all 0.8s
   padding-bottom: 0px
   // 圖片
@@ -37,7 +28,8 @@
   @media (max-width: 960px)
     display: inline-block
     float: left
-  h1
+  h1.logo
+    width: 210px
     margin: 0px
     padding: 0px
     text-align: center
@@ -45,33 +37,39 @@
     font-size: 2.5rem
     font-weight: 400
     letter-spacing: -0.02em
-    @media (max-width: 960px)
-      line-height: 50px
+  h1.logo_Mobile  
+    width: 178.23px
+    margin: 0px
+    padding: 0px
+    text-align: center
+    color: $color_white
+    font-size: 2.5rem
+    font-weight: 400
+    letter-spacing: -0.02em
+    @media (max-width: 767px)
+      width: 140px
+  h1
     svg
       padding-top: 15px
-      width: 210px
-      @media (max-width: 960px)
-        width: 140px 
-        padding-top: 10px
       .cls-1
         fill: $color_white
       .cls-2
         fill: $color_white
       .cls-3
         fill: $color_white
+      @media (max-width: 767px)
+        padding-top: 8px
+  .logo
+    display: block 
+    @media (max-width: 960px)
+      display: none 
+  .logo_Mobile
+    display: none 
+    @media (max-width: 960px)
+      display: block
 .header
   &.js_header--seach
     background: $color_light-grey
-    .navbar__logo
-      h1
-        color: $color_primary
-        // svg
-        //   .cls-1
-        //     fill: $color_primary
-        //   .cls-2
-        //     fill: #a42025
-        //   .cls-3
-        //     fill: #071f38
     .nav__menu 
       @media (min-width: 961px)
         .menu__item
@@ -94,11 +92,11 @@
     background: $color_light-grey
     box-shadow: 0 3px 5px rgba($color_black,0.1)
     .navbar__logo
-      h1
+      h1.logo
         color: $color_primary
         svg
-          padding-top: 5px
-          width: 175px
+          padding-top: 10px
+          width: 178.23px
           transition: 0.3s
           .cls-1
             fill: $color_secondary
@@ -106,6 +104,23 @@
             fill: #a42025
           .cls-3
             fill: $color_black
+        
+      h1.logo_Mobile
+        color: $color_primary
+        svg
+          padding-top: 15px
+          width: 178.23px
+          transition: 0.3s
+          @media (max-width: 767px)
+            padding-top: 8px
+            width: 140px
+          .cls-1
+            fill: #a42025
+          .cls-2
+            fill: $color_black
+          .cls-3
+            fill: $color_secondary
+       
     .nav__menu 
       @media (min-width: 961px)
         .menu__item
@@ -130,8 +145,13 @@
   top: 0
   right: 0
   @media (max-width: 960px)
+    margin-top: 15px
+    margin-bottom: 15px
     position: static
     float: right
+  @media (max-width: 767px)
+    margin-top: 4px
+    margin-bottom: 4px
   .navbar__nav
     float: left
   .nav__icon-group
@@ -195,6 +215,12 @@
   float: right
   margin-left: 10px
   background: $color_primary
+  @media (max-width: 960px)
+    margin-top: 15px
+    margin-bottom: 15px
+  @media (max-width: 767px)
+    margin-top: 4px
+    margin-bottom: 4px
   .menu-toggle_Icon
     width: 55px
     height: 50px
