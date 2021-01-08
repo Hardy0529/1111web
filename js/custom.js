@@ -1,8 +1,12 @@
 $(document).ready(function() {
+<!--// open the related site windows
+   
+    var headerTag = $(".header-tag").height()
+    $(".header-tag-container").height( headerTag + 70 + "px");
 
 
     $(window).scroll(function(){
-        var jumbotronHeight = $(".jumbotron_height").height()
+        var jumbotronHeight = $(".jumbotron_height").height() + 35
         if ($(window).scrollTop() >= jumbotronHeight) {
             $('.header-tag').addClass('fixed-header');
         }
@@ -12,7 +16,7 @@ $(document).ready(function() {
     });
 
 
-
+    
     // Loading
     var percent = 0
 
@@ -183,6 +187,11 @@ $(document).ready(function() {
         $("#js_more_category").css("height", "inherit")
         $(this).css("display", "none")
         $("#btn_category").css("padding-top", "0px")
+
+
+        var headerTag = $(".header-tag").height()
+        $(".header-tag-container").height( headerTag + 70 + "px");
+
     })
     $("#js-menu-toggle").click(function() {
         $(".js-navbar__nav").toggleClass("js__nav-navbar");

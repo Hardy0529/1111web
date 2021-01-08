@@ -9306,6 +9306,10 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 /*-------------------------*/
 /* article */
 /*-------------------------*/
+.article .header-tag-container {
+  margin-bottom: 80px;
+}
+
 .article .header-tag.fixed-header {
   position: fixed;
   top: 80px;
@@ -9351,7 +9355,6 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   color: #f4f4f4;
-  margin-bottom: 80px;
   overflow: hidden;
   padding: 3rem 0 2rem 0;
   position: relative;
@@ -9383,6 +9386,8 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   -webkit-appearance: none;
   -moz-appearance: none;
        appearance: none;
+  background: #43484c url("../../images/arrow.png") no-repeat right 20px center;
+  background-size: 15px;
 }
 
 .article .header-tag h1 {
@@ -9412,6 +9417,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   margin-right: -15px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
+  line-height: 0px;
 }
 
 @media screen and (max-width: 940px) {
