@@ -398,8 +398,6 @@
       display: none
       @media screen and ( max-width:  767px)
         display: block
-        
-
     @media screen and ( max-width:  767px)
       top: 58px
       padding-top: 8px
@@ -524,13 +522,33 @@
         display: inline-block
       
         .icon
-          color: #fff
+          color: $color_white
           margin-left: 8px
+.select-container
+  padding: 8px 0px
+  .select-box
+    border: 2px solid $color_light-grey  
+    z-index: 1
+    ul.select-all
+      background: #43484c url(../../images/arrow.png) no-repeat right 20px top 22px
+      background-size: 15px
+      margin: 0px
+      padding: 0px
+      list-style: none
+      font-size: 20px
+      color: $color_light-grey
+      height: 52px
+      overflow: hidden
+      li
+        .tag_option_a
+          color: $color_light-grey
+          padding: 16px
+          display: block
 
-
-  
-  
-
-
-
+  .select-close  
+    height: 100vh
+    width: 100vh
+    position: fixed
+    left: 0px
+    top: 0px
  

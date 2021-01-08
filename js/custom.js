@@ -1,5 +1,22 @@
 $(document).ready(function() {
-<!--// open the related site windows
+    
+    $(".select-all").click(function(){
+        $(".select-container").toggleClass("select-containerFocus");
+        if ($(".select-container").hasClass("select-containerFocus")) {
+            $(".select-all").css("height" , "inherit")
+        }
+        else{
+            $(".select-all").css("height" , "")
+        }
+        
+    })
+
+    $(".select-close").click(function(){
+        $(".select-container").removeClass("select-containerFocus")
+        $(".select-all").css("height" , "")
+    })
+
+
    
     var headerTag = $(".header-tag").height()
     $(".header-tag-container").height( headerTag + 70 + "px");

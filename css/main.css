@@ -9559,3 +9559,38 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   color: #fff;
   margin-left: 8px;
 }
+
+.select-container {
+  padding: 8px 0px;
+}
+
+.select-container .select-box {
+  border: 2px solid #f4f4f4;
+  z-index: 1;
+}
+
+.select-container .select-box ul.select-all {
+  background: #43484c url(../../images/arrow.png) no-repeat right 20px top 22px;
+  background-size: 15px;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  font-size: 20px;
+  color: #f4f4f4;
+  height: 52px;
+  overflow: hidden;
+}
+
+.select-container .select-box ul.select-all li .tag_option_a {
+  color: #f4f4f4;
+  padding: 16px;
+  display: block;
+}
+
+.select-container .select-close {
+  height: 100vh;
+  width: 100vh;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+}
