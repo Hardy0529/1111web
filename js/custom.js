@@ -1,19 +1,29 @@
 $(document).ready(function() {
-    
+ 
+
+
+
     $(".select-all").click(function(){
         $(".select-container").toggleClass("select-containerFocus");
         if ($(".select-container").hasClass("select-containerFocus")) {
-            $(".select-all").css("height" , "inherit")
+            // $(".select-all").css("height" , "inherit")
+            $(".select-all").addClass("select-all_tall")
+            // $(".tag_first").css("pointer-events","auto")
+            $(".tag_active").css("pointer-events","none")
         }
         else{
-            $(".select-all").css("height" , "")
+            $(".select-all").removeClass("select-all_tall")
+            // $(".select-all").css("height" , "")
+            // $(".tag_first").css("pointer-events","none")
+            // $(".tag_active").css("background-color","")
         }
         
     })
 
+
     $(".select-close").click(function(){
+        $(".select-all").removeClass("select-all_tall")
         $(".select-container").removeClass("select-containerFocus")
-        $(".select-all").css("height" , "")
     })
 
 

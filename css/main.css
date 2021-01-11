@@ -9570,7 +9570,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 }
 
 .select-container .select-box ul.select-all {
-  background: #43484c url(../../images/arrow.png) no-repeat right 20px top 22px;
+  background: url(../../images/arrow.png) no-repeat right 20px top 22px;
   background-size: 15px;
   margin: 0px;
   padding: 0px;
@@ -9578,19 +9578,45 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   font-size: 20px;
   color: #f4f4f4;
   height: 52px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.select-container .select-box ul.select-all li {
+  border-bottom: 2px solid #f4f4f4;
 }
 
 .select-container .select-box ul.select-all li .tag_option_a {
   color: #f4f4f4;
   padding: 16px;
   display: block;
+  pointer-events: none;
+}
+
+.select-container .select-box ul.select-all li:last-child {
+  border-bottom: none;
+}
+
+.select-container .select-box ul.select-all.select-all_tall {
+  height: inherit;
+  background: none;
+}
+
+.select-container .select-box ul.select-all.select-all_tall li a.tag_option_a {
+  pointer-events: auto;
+}
+
+.select-container .select-box ul.select-all.select-all_tall li a.tag_option_a.tag_active {
+  background-color: #00356b;
 }
 
 .select-container .select-close {
-  height: 100vh;
-  width: 100vh;
+  height: 300vh;
+  width: 300vh;
   position: fixed;
-  left: 0px;
-  top: 0px;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
 }
