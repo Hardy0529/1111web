@@ -9578,8 +9578,6 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   font-size: 20px;
   color: #f4f4f4;
   height: 52px;
-  overflow-x: hidden;
-  overflow-y: auto;
   max-height: 50vh;
 }
 
@@ -9612,6 +9610,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 }
 
 .select-container .select-close {
+  display: none;
   height: 300vh;
   width: 300vh;
   position: fixed;

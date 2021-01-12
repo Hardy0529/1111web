@@ -1,21 +1,23 @@
 $(document).ready(function() {
  
-
-
+    $(".tag_first").text($(".tag_active").text());
 
     $(".select-all").click(function(){
         $(".select-container").toggleClass("select-containerFocus");
         if ($(".select-container").hasClass("select-containerFocus")) {
-            // $(".select-all").css("height" , "inherit")
             $(".select-all").addClass("select-all_tall")
-            // $(".tag_first").css("pointer-events","auto")
             $(".tag_active").css("pointer-events","none")
+            $("ul.select-all").css("overflow-x","hidden")
+            $("ul.select-all").css("overflow-y","auto")
+            $(".select-close").css("display","block")
+            $(".tag_first").text("全部文章");
         }
         else{
             $(".select-all").removeClass("select-all_tall")
-            // $(".select-all").css("height" , "")
-            // $(".tag_first").css("pointer-events","none")
-            // $(".tag_active").css("background-color","")
+            $("ul.select-all").css("overflow-x","hidden")
+            $("ul.select-all").css("overflow-y","hidden")
+            $(".select-close").css("display","none")
+            $(".tag_first").text($(".tag_active").text());
         }
         
     })
@@ -24,6 +26,15 @@ $(document).ready(function() {
     $(".select-close").click(function(){
         $(".select-all").removeClass("select-all_tall")
         $(".select-container").removeClass("select-containerFocus")
+        $("ul.select-all").css("overflow-x","hidden")
+        $("ul.select-all").css("overflow-y","hidden")
+        $(".select-close").css("display","none")
+        $(".tag_first").text($(".tag_active").text());
+        jQuery(".select-all").animate({
+            scrollTop: 0,
+        },
+        1000
+    );
     })
 
 
@@ -92,70 +103,6 @@ $(document).ready(function() {
 
 
 
-
-    // 禁止縮放 IOS
-    // window.onload = function() {
-    //     document.addEventListener('touchstart', function(event) {
-    //         if (event.touches.length > 1) {
-    //             event.preventDefault();
-    //         }
-    //     });
-    //     var lastTouchEnd = 0;
-    //     document.addEventListener('touchend', function(event) {
-    //         var now = (new Date()).getTime();
-    //         if (now - lastTouchEnd <= 300) {
-    //             event.preventDefault();
-    //         }
-    //         lastTouchEnd = now;
-    //     }, false);
-    //     document.addEventListener('gesturestart', function(event) {
-    //         event.preventDefault();
-    //     });
-    // }
-
-    // window.addEventListener(
-    //     "touchmove",
-    //     function(event) {
-    //         if(event.scale !== 1) {
-    //             event.preventDefault();
-    //         }
-    //     }, {
-    //         passive: false
-    //     }
-    // );
-
-
-    // $(window).scroll(function(){
-    //     document.addEventListener('touchstart', function(event) {
-    //         if (event.touches.length > 1) {
-    //             event.preventDefault();
-    //         }
-    //     });
-    //     var lastTouchEnd = 0;
-    //     document.addEventListener('touchend', function(event) {
-    //         var now = (new Date()).getTime();
-    //         if (now - lastTouchEnd <= 300) {
-    //             event.preventDefault();
-    //         }
-    //         lastTouchEnd = now;
-    //     }, false);
-    //     document.addEventListener('gesturestart', function(event) {
-    //         event.preventDefault();
-    //     });
-       
-
-    //     window.addEventListener(
-    //         "touchmove",
-    //         function(event) {
-    //             if(event.scale !== 1) {
-    //                 event.preventDefault();
-    //             }
-    //         }, {
-    //             passive: false
-    //         }
-    //     );
-        
-    // })
 
 
   
