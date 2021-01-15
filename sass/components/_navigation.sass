@@ -2,7 +2,7 @@
 /* $Header
 /*-------------------------*/
 
-
+// header
 .header
   width: 100%
   z-index: 100
@@ -12,87 +12,20 @@
     position: fixed
     top: 0
     left: 0
-  ul
-    margin: 0px
-    padding: 0px
 
-.navbar__logo
-  width: 220px
-  display: block
-  transition: all 0.8s
-  padding-bottom: 0px
-  // 圖片
-  // background: url('images/logo.png') 
-  // background-repeat: no-repeat
-  // background-position: center
-  // background-size: 80px
-  @media (max-width: 960px)
-    width: inherit
-    display: inline-block
-    float: left
-  h1.logo
-    width: 210px
-    margin: 0px
-    padding: 0px
-    text-align: center
-    color: $color_white
-    font-size: 2.5rem
-    font-weight: 400
-    letter-spacing: -0.02em
-  h1.logo_Mobile  
-    width: 178.23px
-    margin: 0px
-    padding: 0px
-    text-align: center
-    color: $color_white
-    font-size: 2.5rem
-    font-weight: 400
-    letter-spacing: -0.02em
-    @media (max-width: 767px)
-      width: 140px
-  h1
-    svg
-      padding-top: 15px
-      .cls-1
-        fill: $color_white
-      .cls-2
-        fill: $color_white
-      .cls-3
-        fill: $color_white
-      @media (max-width: 767px)
-        padding-top: 8px
-  .logo
-    display: block 
-    @media (max-width: 960px)
-      display: none 
-  .logo_Mobile
-    display: none 
-    @media (max-width: 960px)
-      display: block
+
+// click seach
 .header
   &.js_header--seach
     background: $color_light-grey
-    .nav__menu 
-      @media (min-width: 961px)
-        .menu__item
-          color: $color_primary 
-    .nav__icon-group 
-      .icon-btn 
-        @media (min-width: 961px)
-          .icon
-             color: $color_primary  
     @media (max-width: 960px)
-      .nav__icon-group 
-        border: 1px solid #999a94
-        background: rgba( $color_grey ,0 )
-        .icon-btn 
-          .icon
-             color: $color_primary
-        .icon-btn_Text
-          color: $color_primary 
-  &.header--scrolling
-    background: $color_light-grey
-    box-shadow: 0 3px 5px rgba($color_black,0.1)
+      background: $color_light-grey
+      .icon-btn 
+        .icon
+            color: $color_primary
+      .icon-btn_Text
+        color: $color_primary 
+    // logo
     .navbar__logo
       h1.logo
         color: $color_primary
@@ -106,7 +39,6 @@
             fill: #a42025
           .cls-3
             fill: $color_black
-        
       h1.logo_Mobile
         color: $color_primary
         svg
@@ -122,26 +54,138 @@
             fill: $color_black
           .cls-3
             fill: $color_secondary
-       
-    .nav__menu 
-      @media (min-width: 961px)
-        .menu__item
-          color: $color_secondary
-    .nav__icon-group 
-      .icon-btn 
-        @media (min-width: 961px)
-          .icon
-             color: $color_secondary
-    @media (max-width: 960px)
+    // menu
+    .nav
+      // menu item
+      .navbar__nav
+        .nav__menu 
+          @media (min-width: 961px)
+            .menu__item
+              color: $color_primary 
+      // icon group
       .nav__icon-group 
-        border: 1px solid #999a94
-        background: rgba( $color_grey ,0 )
-        .icon-btn 
-          .icon
-             color: $color_primary
-        .icon-btn_Text
-          color: $color_primary
+        // search
+        .icon-search
+          @media (max-width: 960px)
+            border: 1px solid $color_primary
+            background: rgba( $color_grey ,0 )
+          .icon-btn 
+            .icon
+              color: $color_primary
+              @media (min-width: 961px)
+                  color: $color_primary
+          .icon-btn_Text
+            color: $color_primary
 
+
+// scrolling header
+.header
+  &.header--scrolling
+    background: $color_light-grey
+    box-shadow: 0 3px 5px rgba($color_black,0.5)
+    // logo
+    .navbar__logo
+      h1.logo
+        color: $color_primary
+        svg
+          padding-top: 10px
+          width: 178.23px
+          transition: 0.3s
+          .cls-1
+            fill: $color_secondary
+          .cls-2
+            fill: #a42025
+          .cls-3
+            fill: $color_black
+      h1.logo_Mobile
+        color: $color_primary
+        svg
+          padding-top: 15px
+          width: 178.23px
+          transition: 0.3s
+          @media (max-width: 767px)
+            padding-top: 8px
+            width: 140px
+          .cls-1
+            fill: #a42025
+          .cls-2
+            fill: $color_black
+          .cls-3
+            fill: $color_secondary
+    // menu
+    .nav
+      // menu item
+      .navbar__nav
+        .nav__menu 
+          @media (min-width: 961px)
+            .menu__item
+              color: $color_secondary
+      // icon group
+      .nav__icon-group 
+
+        // search
+        .icon-search
+          @media (max-width: 960px)
+            border: 1px solid $color_primary
+            background: rgba( $color_grey ,0 )
+          .icon-btn 
+            .icon
+              color: $color_primary
+              @media (min-width: 961px)
+                  color: $color_secondary 
+          .icon-btn_Text
+            color: $color_primary
+      
+
+// logo
+.navbar__logo
+  width: 220px
+  display: block
+  transition: all 0.8s
+  padding-bottom: 0px
+  @media (max-width: 960px)
+    width: inherit
+    display: inline-block
+    float: left
+  h1.logo
+    width: 210px
+    margin: 0px
+    padding: 0px
+    text-align: center
+    color: $color_white
+    font-size: 2.5rem
+    font-weight: 400
+    letter-spacing: -0.02em
+    display: block
+    @media (max-width: 960px)
+      display: none  
+  h1.logo_Mobile  
+    width: 178.23px
+    margin: 0px
+    padding: 0px
+    text-align: center
+    color: $color_white
+    font-size: 2.5rem
+    font-weight: 400
+    letter-spacing: -0.02em
+    display: none 
+    @media (max-width: 960px)
+      display: block
+    @media (max-width: 767px)
+      width: 140px
+  h1
+    svg
+      padding-top: 15px
+      .cls-1
+        fill: $color_white
+      .cls-2
+        fill: $color_white
+      .cls-3
+        fill: $color_white
+      @media (max-width: 767px)
+        padding-top: 8px
+   
+// menu
 .nav
   position: absolute
   top: 0
@@ -158,61 +202,64 @@
     float: left
   .nav__icon-group
     float: right
-.nav__menu
-  float: left
-  list-style: none
-  li
+
+  // menu item
+  .nav__menu
     float: left
-
-  .menu__item
-    display: block
-    padding: 24px
-    color: $color_primary
-    line-height: 32px
-    font-size: 18px
-    transition: all 0.3s
-    @media (min-width: 961px)
-      color: $color_white
-
-    @media (max-width: 960px)
-      font-size: 24px
-      color: $color_light-grey
-.nav__icon-group
-  float: left
-  @media (max-width: 960px)
-    border: 1px solid $color_grey
-    background: rgba( $color_grey ,0.2 )
-  .icon-btn
-    padding: 24px
-    line-height: 32px
-    display: inline-block
-    @media (max-width: 960px)
-      padding: 8px 17px
+    list-style: none
+    margin: 0px
+    padding: 0px
+    li
       float: left
-      margin-right: 0px
-    &:last-child
-      margin: 0
-    .icon
-      color: $color_white
+    .menu__item
+      display: block
+      padding: 24px
+      color: $color_primary
+      line-height: 32px
       font-size: 18px
+      transition: all 0.3s
       @media (min-width: 961px)
         color: $color_white
       @media (max-width: 960px)
-        font-size: 15px
-  .icon-btn_Text 
-    display: none
-    float: right
-    color: $color_light-grey
-    @media (min-width: 768px) and (max-width: 960px)
-      display: block
-      text-transform: uppercase
-      line-height: 48px
+        font-size: 24px
+        color: $color_light-grey
+
+// menu Icon Group
+.nav__icon-group
+  float: left
+  .icon-search
+    @media (max-width: 960px)
+      border: 1px solid $color_grey
+      background: rgba( $color_grey ,0.2 )
+    .icon-btn
+      padding: 24px
+      line-height: 32px
+      display: inline-block
+      @media (max-width: 960px)
+        padding: 8px 17px
+        float: left
+        margin-right: 0px
+      .icon
+        color: $color_white
+        font-size: 18px
+        @media (min-width: 961px)
+          color: $color_white
+        @media (max-width: 960px)
+          font-size: 15px
+    .icon-btn_Text 
+      display: none
       float: right
       color: $color_light-grey
-      padding-right: 16px
-  
-/* menu-toggle
+      @media (min-width: 768px) and (max-width: 960px)
+        display: block
+        text-transform: uppercase
+        line-height: 48px
+        float: right
+        color: $color_light-grey
+        padding-right: 16px
 
+
+/* menu-toggle
 .menu-toggle
   float: right
   margin-left: 10px
@@ -249,9 +296,9 @@
     padding-right: 16px
     @media (max-width: 767px)
       display: none
-@media (min-width: 961px)
-  .menu-toggle
+  @media (min-width: 961px)
     display: none
+
 
 /* popup-nav
 @media (max-width: 960px)
@@ -287,8 +334,6 @@
       text-align: center
       padding: 16px
 
-      
-
   /* popup-close
 
   .popup-close
@@ -315,7 +360,7 @@
         transform: translateY(-50%) rotate(-45deg)
 
 
-// search 
+// search-style
 form.header_form_seach
   .container
     max-width: 1200px
@@ -373,7 +418,9 @@ form.header_form_seach
           .icon-btn
             .icon
               font-size: 1.125rem
-// search
+
+  
+// search-close
 .search_click_Mask
   position: fixed
   width: 100vw
@@ -385,6 +432,6 @@ form.header_form_seach
   display: none
   transition: .3s
 
-.search_click_Mask.click_Search_Mask.click_Search_MaskStyle
-  display: block
+  &.click_Search_Mask.click_Search_MaskStyle
+    display: block
   
