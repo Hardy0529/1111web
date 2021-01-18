@@ -205,10 +205,10 @@ $(document).ready(function() {
             $(".tag_first").text("全部文章");
 
           
-            unScroll()
-            $('html,body').css({
-                'overflow': 'hidden'
-            });
+            // unScroll()
+            // $('html,body').css({
+            //     'overflow': 'hidden'
+            // });
            
         }
         else{
@@ -219,18 +219,41 @@ $(document).ready(function() {
             $(".tag_first").text($(".tag_active").text());
 
            
+            // removeUnScroll()
+            // $('html,body').css({
+            //     'overflow': 'auto'
+            // });
+            
+        }
+        
+    })
+
+
+    $(".select-all").click(function() {
+        $(".select-close").toggleClass("select-no_scroll");
+        if ($(".select-close").hasClass("select-no_scroll")) {
+            unScroll()
+            $('html,body').css({
+                'overflow': 'hidden'
+            });
+            
+        } 
+        else {
+            
             removeUnScroll()
             $('html,body').css({
                 'overflow': 'auto'
             });
             
         }
-        
-    })
+    });
+
+
 
     $(".select-close").click(function(){
         $(".select-all").removeClass("select-all_tall")
         $(".select-container").removeClass("select-containerFocus")
+        $(".select-close").removeClass("select-no_scroll")
         $("ul.select-all").css("overflow-x","hidden")
         $("ul.select-all").css("overflow-y","hidden")
         $(".select-close").css("display","none")
