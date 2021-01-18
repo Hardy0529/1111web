@@ -9419,6 +9419,14 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   }
 }
 
+@media screen and (max-width: 1000px) {
+  .article .header-tag.fixed-header {
+    top: 80px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
 @media screen and (max-width: 767px) {
   .article .header-tag.fixed-header {
     top: 58px;
