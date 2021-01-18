@@ -69,9 +69,6 @@ $(document).ready(function() {
             $(".header").addClass("js_header--seach");
 
         }
-
-
-        $('html , body').css("height","100vh")
     });
     $("#icon-btn_search").click(function() {
         $(".search_click_Mask").toggleClass("click_Search_Mask");
@@ -194,7 +191,6 @@ $(document).ready(function() {
 
 
     // 標籤選單
-    // Tag Mobile
     $(".tag_first").text($(".tag_active").text());
 
     $(".select-all").click(function(){
