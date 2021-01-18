@@ -4,12 +4,20 @@ $(document).ready(function() {
         $(document).on('scroll.unable', function(e) {
             $(document).scrollTop(top);
         })
+
+        $('html,body').css({
+            'overflow': 'hidden'
+        });
     }
+
     function removeUnScroll() {
         $(document).unbind("scroll.unable");
 
-    }
+        $('html,body').css({
+            'overflow': 'auto'
+        });
 
+    }
 
     // Loading
     var percent = 0
@@ -24,7 +32,6 @@ $(document).ready(function() {
     },30)
     
     // Loading Page  loading 期間無法滾動 loading 結束後轉場
-
     var timer = setInterval(function(){
         $(".bar").css("width",percent+"%")
             percent+=1
@@ -36,18 +43,15 @@ $(document).ready(function() {
             }
             if ($(".pageLoading").hasClass("loading-no_scroll")) {
             
-             
+              
                 unScroll()
-                $('html,body').css({
-                    'overflow': 'hidden'
-                });
+
+                
             }
             else {
                 removeUnScroll()
-                $('html,body').css({
-                    'overflow': 'auto'
-                });
                
+                
         }
     },30)
 
@@ -85,9 +89,7 @@ $(document).ready(function() {
             
            
             unScroll()
-            $('html,body').css({
-                'overflow': 'hidden'
-            });
+            
 
             $(".select-all").removeClass("select-all_tall")
             $(".select-container").removeClass("select-containerFocus")
@@ -104,9 +106,7 @@ $(document).ready(function() {
         } else {
             removeUnScroll()
 
-            $('html,body').css({
-                'overflow': 'auto'
-            });
+            
             
         }
     });
@@ -114,12 +114,10 @@ $(document).ready(function() {
         $(".search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
-       
-        removeUnScroll()
 
-        $('html,body').css({
-            'overflow': 'auto'
-        });
+
+        removeUnScroll()
+     
         
     })
     // header toggle
@@ -138,51 +136,40 @@ $(document).ready(function() {
 
         $(".js-navbar__nav").toggleClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
+           
             unScroll()
-            $('html,body').css({
-                'overflow': 'hidden'
-            });
+
+           
             
         } 
         else {
-            
+           
             removeUnScroll()
-            $('html,body').css({
-                'overflow': 'auto'
-            });
             
+           
         }
     });
     $("#js-popup-close").click(function() {
         $(".js-navbar__nav").removeClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
-           
+            
+            
             unScroll()
-            $('html,body').css({
-                'overflow': 'hidden'
-            });
            
+            
         } else {
 
-           
+            
             removeUnScroll()
-
-            $('html,body').css({
-                'overflow': 'auto'
-            });
+            
             
         }
         $(".search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
 
-       
+        
         removeUnScroll()
-
-        $('html,body').css({
-            'overflow': 'auto'
-        });
-
     });
 
 
@@ -204,11 +191,9 @@ $(document).ready(function() {
             $(".select-close").css("display","block")
             $(".tag_first").text("全部文章");
 
-          
-            // unScroll()
-            // $('html,body').css({
-            //     'overflow': 'hidden'
-            // });
+            unScroll()
+
+           
            
         }
         else{
@@ -218,42 +203,17 @@ $(document).ready(function() {
             $(".select-close").css("display","none")
             $(".tag_first").text($(".tag_active").text());
 
-           
-            // removeUnScroll()
-            // $('html,body').css({
-            //     'overflow': 'auto'
-            // });
+            removeUnScroll()
+
+            
             
         }
         
     })
 
-
-    $(".select-all").click(function() {
-        $(".select-close").toggleClass("select-no_scroll");
-        if ($(".select-close").hasClass("select-no_scroll")) {
-            unScroll()
-            $('html,body').css({
-                'overflow': 'hidden'
-            });
-            
-        } 
-        else {
-            
-            removeUnScroll()
-            $('html,body').css({
-                'overflow': 'auto'
-            });
-            
-        }
-    });
-
-
-
     $(".select-close").click(function(){
         $(".select-all").removeClass("select-all_tall")
         $(".select-container").removeClass("select-containerFocus")
-        $(".select-close").removeClass("select-no_scroll")
         $("ul.select-all").css("overflow-x","hidden")
         $("ul.select-all").css("overflow-y","hidden")
         $(".select-close").css("display","none")
@@ -264,11 +224,9 @@ $(document).ready(function() {
         0
         );
 
-     
         removeUnScroll()
-        $('html,body').css({
-            'overflow': 'auto'
-        });
+
+    
         
     })
 
