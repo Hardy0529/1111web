@@ -1,53 +1,5 @@
 $(document).ready(function() {
-
-
-
-    <!-- /* Loading */ -->
-    var percent = 0
-    // Loading Page Light
-    var timer_light = setInterval(function(){
-    $(".bar").css("width",percent+"%")
-        percent+=1
-        if (percent>=5){
-            clearInterval(timer_light)
-            $(".pageLoading").addClass("loading-Page_light")
-        }
-    },30)
-    
-    // Loading Page  loading 期間無法滾動
-    var timer = setInterval(function(){
-        $(".bar").css("width",percent+"%")
-            percent+=1
-            if (percent>=100){
-                
-                $(".pageLoading").removeClass("loading-no_scroll")
-                $(".pageLoading").addClass("complete")
-                clearInterval(timer)
-            }
-            if ($(".pageLoading").hasClass("loading-no_scroll")) {
-            
-                function unScroll() {
-                    var top = $(document).scrollTop();
-                    $(document).on('scroll.unable', function(e) {
-                        $(document).scrollTop(top);
-                    })
-                }
-                $('html,body').css({
-                    'overflow': 'hidden'
-                });
-            }
-            else {
-                function removeUnScroll() {
-                    $(document).unbind("scroll.unable");
-
-                }
-                $('html,body').css({
-                    'overflow': 'auto'
-                });
-        }
-    },30)
-
-
+ 
     $(".tag_first").text($(".tag_active").text());
 
     $(".select-all").click(function(){
@@ -59,16 +11,6 @@ $(document).ready(function() {
             $("ul.select-all").css("overflow-y","auto")
             $(".select-close").css("display","block")
             $(".tag_first").text("全部文章");
-
-            function unScroll() {
-                var top = $(document).scrollTop();
-                $(document).on('scroll.unable', function(e) {
-                    $(document).scrollTop(top);
-                })
-            }
-            $('html,body').css({
-                'overflow': 'hidden'
-            });
         }
         else{
             $(".select-all").removeClass("select-all_tall")
@@ -76,14 +18,6 @@ $(document).ready(function() {
             $("ul.select-all").css("overflow-y","hidden")
             $(".select-close").css("display","none")
             $(".tag_first").text($(".tag_active").text());
-
-            function removeUnScroll() {
-                $(document).unbind("scroll.unable");
-
-            }
-            $('html,body').css({
-                'overflow': 'auto'
-            });
         }
         
     })
@@ -99,16 +33,8 @@ $(document).ready(function() {
         jQuery(".select-all").animate({
             scrollTop: 0,
         },
-        0
-        );
-
-        function removeUnScroll() {
-            $(document).unbind("scroll.unable");
-
-        }
-        $('html,body').css({
-            'overflow': 'auto'
-        });
+        1000
+    );
     })
 
 
@@ -129,7 +55,48 @@ $(document).ready(function() {
 
 
     
-   
+    // Loading
+    var percent = 0
+
+    var timer_light = setInterval(function(){
+        $(".bar").css("width",percent+"%")
+            percent+=1
+            if (percent>=5){
+                clearInterval(timer_light)
+                $(".pageLoading").addClass("loading_light")
+            }
+        },30)
+
+    var timer = setInterval(function(){
+    $(".bar").css("width",percent+"%")
+        percent+=1
+        if (percent>=100){
+            $(".pageLoading").removeClass("pageLoading_noscroll")
+            $(".pageLoading").addClass("complete")
+            clearInterval(timer)
+        }
+        // 調整大小
+        if ($(".pageLoading").hasClass("pageLoading_noscroll")) {
+        
+            function unScroll() {
+                var top = $(document).scrollTop();
+                $(document).on('scroll.unable', function(e) {
+                    $(document).scrollTop(top);
+                })
+            }
+            $('html,body').css({
+                'overflow': 'hidden'
+            });
+        } else {
+            function removeUnScroll() {
+                $(document).unbind("scroll.unable");
+
+            }
+            $('html,body').css({
+                'overflow': 'auto'
+            });
+        }
+    },30)
 
     
 
@@ -165,19 +132,6 @@ $(document).ready(function() {
             $('html,body').css({
                 'overflow': 'hidden'
             });
-
-            $(".select-all").removeClass("select-all_tall")
-            $(".select-container").removeClass("select-containerFocus")
-            $("ul.select-all").css("overflow-x","hidden")
-            $("ul.select-all").css("overflow-y","hidden")
-            $(".select-close").css("display","none")
-            $(".tag_first").text($(".tag_active").text());
-            jQuery(".select-all").animate({
-                scrollTop: 0,
-            },
-            0
-            );
-          
         } else {
             function removeUnScroll() {
                 $(document).unbind("scroll.unable");
@@ -186,10 +140,6 @@ $(document).ready(function() {
             $('html,body').css({
                 'overflow': 'auto'
             });
-
-
-
-           
         }
 
     });
@@ -205,10 +155,6 @@ $(document).ready(function() {
         $('html,body').css({
             'overflow': 'auto'
         });
-
-
-
-
     })
 
     $("#js_more_btn").click(function() {
@@ -222,18 +168,6 @@ $(document).ready(function() {
 
     })
     $("#js-menu-toggle").click(function() {
-        $(".select-all").removeClass("select-all_tall")
-        $(".select-container").removeClass("select-containerFocus")
-        $("ul.select-all").css("overflow-x","hidden")
-        $("ul.select-all").css("overflow-y","hidden")
-        $(".select-close").css("display","none")
-        $(".tag_first").text($(".tag_active").text());
-        jQuery(".select-all").animate({
-            scrollTop: 0,
-        },
-        0
-        );
-
         $(".js-navbar__nav").toggleClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
             function unScroll() {
@@ -256,8 +190,6 @@ $(document).ready(function() {
     });
     $("#js-popup-close").click(function() {
         $(".js-navbar__nav").removeClass("js__nav-navbar");
-
-       
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
             function unScroll() {
                 var top = $(document).scrollTop();
@@ -269,7 +201,7 @@ $(document).ready(function() {
                 'overflow': 'hidden'
             });
 
-           
+
 
         } else {
 
