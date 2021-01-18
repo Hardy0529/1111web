@@ -29,6 +29,7 @@ $(document).ready(function() {
                         $(document).scrollTop(top);
                     })
                 }
+                unScroll()
                 $('html,body').css({
                     'overflow': 'hidden'
                 });
@@ -41,6 +42,7 @@ $(document).ready(function() {
                 $('html,body').css({
                     'overflow': 'auto'
                 });
+                removeUnScroll()
         }
     },30)
 
@@ -75,12 +77,14 @@ $(document).ready(function() {
         $(".search_click_Mask").toggleClass("click_Search_Mask");
         if ($(".search_click_Mask").hasClass("click_Search_Mask")) {
             $(".search_click_Mask").addClass("click_Search_MaskStyle")
+            
             function unScroll() {
                 var top = $(document).scrollTop();
                 $(document).on('scroll.unable', function(e) {
                     $(document).scrollTop(top);
                 })
             }
+            unScroll()
             $('html,body').css({
                 'overflow': 'hidden'
             });
@@ -100,11 +104,11 @@ $(document).ready(function() {
         } else {
             function removeUnScroll() {
                 $(document).unbind("scroll.unable");
-
             }
             $('html,body').css({
                 'overflow': 'auto'
             });
+            removeUnScroll()
         }
     });
     $(".search_click_Mask").click(function() {
@@ -117,6 +121,7 @@ $(document).ready(function() {
         $('html,body').css({
             'overflow': 'auto'
         });
+        removeUnScroll()
     })
     // header toggle
     $("#js-menu-toggle").click(function() {
@@ -143,13 +148,16 @@ $(document).ready(function() {
             $('html,body').css({
                 'overflow': 'hidden'
             });
-        } else {
+            unScroll()
+        } 
+        else {
             function removeUnScroll() {
                 $(document).unbind("scroll.unable");
             }
             $('html,body').css({
                 'overflow': 'auto'
             });
+            removeUnScroll()
         }
     });
     $("#js-popup-close").click(function() {
@@ -164,6 +172,7 @@ $(document).ready(function() {
             $('html,body').css({
                 'overflow': 'hidden'
             });
+            unScroll()
         } else {
 
             function removeUnScroll() {
@@ -172,6 +181,7 @@ $(document).ready(function() {
             $('html,body').css({
                 'overflow': 'auto'
             });
+            removeUnScroll()
         }
         $(".search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
@@ -215,6 +225,7 @@ $(document).ready(function() {
             $('html,body').css({
                 'overflow': 'hidden'
             });
+            unScroll()
         }
         else{
             $(".select-all").removeClass("select-all_tall")
@@ -225,11 +236,11 @@ $(document).ready(function() {
 
             function removeUnScroll() {
                 $(document).unbind("scroll.unable");
-
             }
             $('html,body').css({
                 'overflow': 'auto'
             });
+            removeUnScroll()
         }
         
     })
@@ -249,11 +260,11 @@ $(document).ready(function() {
 
         function removeUnScroll() {
             $(document).unbind("scroll.unable");
-
         }
         $('html,body').css({
             'overflow': 'auto'
         });
+        removeUnScroll()
     })
 
     var headerTag = $(".header-tag").height()
