@@ -18,7 +18,7 @@ $(document).ready(function() {
         });
     }
 
-    // 標籤樣式
+    // 標籤關閉
     function tag() {
         $("#select-all").removeClass("select-all_tall")
         $(".select-container").removeClass("select-containerFocus")
@@ -94,7 +94,7 @@ $(document).ready(function() {
             // 滾動停止
             unScroll()
             
-            // 標籤樣式
+            // 標籤關閉
             tag()
 
             jQuery("#select-all").animate({
@@ -125,7 +125,7 @@ $(document).ready(function() {
     // header toggle
     $("#js-menu-toggle").click(function() {
          
-        // 標籤樣式
+        // 標籤關閉
         tag()
 
         jQuery("#select-all").animate({
@@ -200,7 +200,7 @@ $(document).ready(function() {
         }
         else{
 
-            // 標籤樣式
+            // 標籤關閉
             tag()
 
             // 恢復滾動
@@ -213,7 +213,7 @@ $(document).ready(function() {
     })
 
     $("#select-close").click(function(){
-        // 標籤樣式
+        // 標籤關閉
         tag()
 
         jQuery("#select-all").animate({
