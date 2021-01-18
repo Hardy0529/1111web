@@ -160,7 +160,7 @@
         moz-appearance:none
         -webkit-appearance: none
         appearance: none
-        background: $color_secondary url("../../images/arrow.png") no-repeat right 20px center
+        background: $color_secondary url("../../assets/arrow.png") no-repeat right 20px center
         background-size: 15px
     & h1 
       font-weight: 500
@@ -253,10 +253,11 @@
 .select-container
   padding: 8px 0px
   .select-box
+    background: #43484c
     border: 2px solid $color_light-grey  
     z-index: 1
     ul.select-all
-      background: url(../../images/arrow.png) no-repeat right 20px top 22px
+      background: url(../../assets/arrow.png) no-repeat right 20px top 22px
       background-size: 15px
       margin: 0px
       padding: 0px
@@ -285,6 +286,8 @@
             &.tag_active
               background-color: $color_primary
   .select-close  
+ 
+    background: rgba(0,0 ,0 ,0.2 )
     display: none
     height: 300vh
     width: 300vh
