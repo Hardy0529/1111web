@@ -1,23 +1,34 @@
 $(document).ready(function() {
+
+    // 取消滾動
     function unScroll() {
         var top = $(document).scrollTop();
         $(document).on('scroll.unable', function(e) {
             $(document).scrollTop(top);
         })
-
         $('html,body').css({
             'overflow': 'hidden'
         });
     }
-
+    // 恢復滾動
     function removeUnScroll() {
         $(document).unbind("scroll.unable");
-
         $('html,body').css({
             'overflow': 'auto'
         });
-
     }
+
+    // 標籤樣式
+    function tag() {
+        $(".select-all").removeClass("select-all_tall")
+        $(".select-container").removeClass("select-containerFocus")
+        $("ul.select-all").css("overflow-x","hidden")
+        $("ul.select-all").css("overflow-y","hidden")
+        $(".select-close").css("display","none")
+        $(".tag_first").text($(".tag_active").text());
+    }
+
+
 
     // Loading
     var percent = 0
@@ -42,17 +53,12 @@ $(document).ready(function() {
                 clearInterval(timer)
             }
             if ($(".pageLoading").hasClass("loading-no_scroll")) {
-            
-              
                 unScroll()
-
-                
             }
             else {
                 removeUnScroll()
-               
-                
-        }
+ 
+            }   
     },30)
 
 
@@ -78,25 +84,19 @@ $(document).ready(function() {
         $("#js-search").slideToggle(500);
         if ($("#js_headerSearch").hasClass("js_header--seach")) {
             $(".header").addClass("js_header--seach");
-
         }
-
     });
     $("#icon-btn_search").click(function() {
         $(".search_click_Mask").toggleClass("click_Search_Mask");
         if ($(".search_click_Mask").hasClass("click_Search_Mask")) {
             $(".search_click_Mask").addClass("click_Search_MaskStyle")
             
-           
+            // 無法滾動
             unScroll()
             
+            // 標籤樣式
+            tag()
 
-            $(".select-all").removeClass("select-all_tall")
-            $(".select-container").removeClass("select-containerFocus")
-            $("ul.select-all").css("overflow-x","hidden")
-            $("ul.select-all").css("overflow-y","hidden")
-            $(".select-close").css("display","none")
-            $(".tag_first").text($(".tag_active").text());
             jQuery(".select-all").animate({
                 scrollTop: 0,
             },
@@ -104,6 +104,8 @@ $(document).ready(function() {
             );
           
         } else {
+
+            // 恢復滾動
             removeUnScroll()
 
             
@@ -115,19 +117,17 @@ $(document).ready(function() {
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
 
-
+        // 恢復滾動
         removeUnScroll()
      
         
     })
     // header toggle
     $("#js-menu-toggle").click(function() {
-        $(".select-all").removeClass("select-all_tall")
-        $(".select-container").removeClass("select-containerFocus")
-        $("ul.select-all").css("overflow-x","hidden")
-        $("ul.select-all").css("overflow-y","hidden")
-        $(".select-close").css("display","none")
-        $(".tag_first").text($(".tag_active").text());
+         
+        // 標籤樣式
+        tag()
+
         jQuery(".select-all").animate({
             scrollTop: 0,
         },
@@ -137,13 +137,14 @@ $(document).ready(function() {
         $(".js-navbar__nav").toggleClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
            
+            // 滾動停止
             unScroll()
 
            
             
         } 
         else {
-           
+            // 恢復滾動
             removeUnScroll()
             
            
@@ -153,13 +154,13 @@ $(document).ready(function() {
         $(".js-navbar__nav").removeClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
             
-            
+            // 滾動停止
             unScroll()
            
             
         } else {
 
-            
+             // 恢復滾動
             removeUnScroll()
             
             
@@ -168,7 +169,7 @@ $(document).ready(function() {
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
 
-        
+        // 恢復滾動
         removeUnScroll()
     });
 
@@ -191,18 +192,18 @@ $(document).ready(function() {
             $(".select-close").css("display","block")
             $(".tag_first").text("全部文章");
 
+            // 滾動停止
             unScroll()
 
            
            
         }
         else{
-            $(".select-all").removeClass("select-all_tall")
-            $("ul.select-all").css("overflow-x","hidden")
-            $("ul.select-all").css("overflow-y","hidden")
-            $(".select-close").css("display","none")
-            $(".tag_first").text($(".tag_active").text());
 
+            // 標籤樣式
+            tag()
+
+            // 恢復滾動
             removeUnScroll()
 
             
@@ -212,18 +213,16 @@ $(document).ready(function() {
     })
 
     $(".select-close").click(function(){
-        $(".select-all").removeClass("select-all_tall")
-        $(".select-container").removeClass("select-containerFocus")
-        $("ul.select-all").css("overflow-x","hidden")
-        $("ul.select-all").css("overflow-y","hidden")
-        $(".select-close").css("display","none")
-        $(".tag_first").text($(".tag_active").text());
+        // 標籤樣式
+        tag()
+
         jQuery(".select-all").animate({
             scrollTop: 0,
         },
         0
         );
 
+        // 恢復恢復
         removeUnScroll()
 
     
