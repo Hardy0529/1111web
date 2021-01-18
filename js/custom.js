@@ -20,12 +20,12 @@ $(document).ready(function() {
 
     // 標籤樣式
     function tag() {
-        $(".select-all").removeClass("select-all_tall")
+        $("#select-all").removeClass("select-all_tall")
         $(".select-container").removeClass("select-containerFocus")
-        $("ul.select-all").css("overflow-x","hidden")
-        $("ul.select-all").css("overflow-y","hidden")
-        $(".select-close").css("display","none")
-        $(".tag_first").text($(".tag_active").text());
+        $("ul#select-all").css("overflow-x","hidden")
+        $("ul#select-all").css("overflow-y","hidden")
+        $("#select-close").css("display","none")
+        $("#tag_first").text($(".tag_active").text());
     }
 
 
@@ -87,9 +87,9 @@ $(document).ready(function() {
         }
     });
     $("#icon-btn_search").click(function() {
-        $(".search_click_Mask").toggleClass("click_Search_Mask");
-        if ($(".search_click_Mask").hasClass("click_Search_Mask")) {
-            $(".search_click_Mask").addClass("click_Search_MaskStyle")
+        $("#search_click_Mask").toggleClass("click_Search_Mask");
+        if ($("#search_click_Mask").hasClass("click_Search_Mask")) {
+            $("#search_click_Mask").addClass("click_Search_MaskStyle")
             
             // 滾動停止
             unScroll()
@@ -97,7 +97,7 @@ $(document).ready(function() {
             // 標籤樣式
             tag()
 
-            jQuery(".select-all").animate({
+            jQuery("#select-all").animate({
                 scrollTop: 0,
             },
             0
@@ -112,8 +112,8 @@ $(document).ready(function() {
             
         }
     });
-    $(".search_click_Mask").click(function() {
-        $(".search_click_Mask").removeClass("click_Search_Mask")
+    $("#search_click_Mask").click(function() {
+        $("#search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
 
@@ -128,7 +128,7 @@ $(document).ready(function() {
         // 標籤樣式
         tag()
 
-        jQuery(".select-all").animate({
+        jQuery("#select-all").animate({
             scrollTop: 0,
         },
         0
@@ -165,7 +165,7 @@ $(document).ready(function() {
             
             
         }
-        $(".search_click_Mask").removeClass("click_Search_Mask")
+        $("#search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
 
@@ -179,18 +179,18 @@ $(document).ready(function() {
 
     // 標籤選單
     // Tag Mobile
-    $(".tag_first").text($(".tag_active").text());
+    $("#tag_first").text($(".tag_active").text());
 
-    $(".select-all").click(function(){
+    $("#select-all").click(function(){
         $(".select-container").toggleClass("select-containerFocus");
         if ($(".select-container").hasClass("select-containerFocus")) {
-            $(".select-all").addClass("select-all_tall")
+            $("#select-all").addClass("select-all_tall")
             
             $(".tag_active").css("pointer-events","none")
-            $("ul.select-all").css("overflow-x","hidden")
-            $("ul.select-all").css("overflow-y","auto")
-            $(".select-close").css("display","block")
-            $(".tag_first").text("全部文章");
+            $("ul#select-all").css("overflow-x","hidden")
+            $("ul#select-all").css("overflow-y","auto")
+            $("#select-close").css("display","block")
+            $("#tag_first").text("全部文章");
 
             // 滾動停止
             unScroll()
@@ -212,11 +212,11 @@ $(document).ready(function() {
         
     })
 
-    $(".select-close").click(function(){
+    $("#select-close").click(function(){
         // 標籤樣式
         tag()
 
-        jQuery(".select-all").animate({
+        jQuery("#select-all").animate({
             scrollTop: 0,
         },
         0
