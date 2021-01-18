@@ -1,4 +1,16 @@
 $(document).ready(function() {
+    function unScroll() {
+        var top = $(document).scrollTop();
+        $(document).on('scroll.unable', function(e) {
+            $(document).scrollTop(top);
+        })
+    }
+    function removeUnScroll() {
+        $(document).unbind("scroll.unable");
+
+    }
+
+
     // Loading
     var percent = 0
     // Loading Page Light
@@ -12,6 +24,7 @@ $(document).ready(function() {
     },30)
     
     // Loading Page  loading 期間無法滾動 loading 結束後轉場
+
     var timer = setInterval(function(){
         $(".bar").css("width",percent+"%")
             percent+=1
@@ -23,26 +36,18 @@ $(document).ready(function() {
             }
             if ($(".pageLoading").hasClass("loading-no_scroll")) {
             
-                function unScroll() {
-                    var top = $(document).scrollTop();
-                    $(document).on('scroll.unable', function(e) {
-                        $(document).scrollTop(top);
-                    })
-                }
+             
                 unScroll()
                 $('html,body').css({
                     'overflow': 'hidden'
                 });
             }
             else {
-                function removeUnScroll() {
-                    $(document).unbind("scroll.unable");
-
-                }
+                removeUnScroll()
                 $('html,body').css({
                     'overflow': 'auto'
                 });
-                removeUnScroll()
+               
         }
     },30)
 
@@ -78,12 +83,7 @@ $(document).ready(function() {
         if ($(".search_click_Mask").hasClass("click_Search_Mask")) {
             $(".search_click_Mask").addClass("click_Search_MaskStyle")
             
-            function unScroll() {
-                var top = $(document).scrollTop();
-                $(document).on('scroll.unable', function(e) {
-                    $(document).scrollTop(top);
-                })
-            }
+           
             unScroll()
             $('html,body').css({
                 'overflow': 'hidden'
@@ -102,26 +102,25 @@ $(document).ready(function() {
             );
           
         } else {
-            function removeUnScroll() {
-                $(document).unbind("scroll.unable");
-            }
+            removeUnScroll()
+
             $('html,body').css({
                 'overflow': 'auto'
             });
-            removeUnScroll()
+            
         }
     });
     $(".search_click_Mask").click(function() {
         $(".search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
-        function removeUnScroll() {
-            $(document).unbind("scroll.unable");
-        }
+       
+        removeUnScroll()
+
         $('html,body').css({
             'overflow': 'auto'
         });
-        removeUnScroll()
+        
     })
     // header toggle
     $("#js-menu-toggle").click(function() {
@@ -139,58 +138,47 @@ $(document).ready(function() {
 
         $(".js-navbar__nav").toggleClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
-            function unScroll() {
-                var top = $(document).scrollTop();
-                $(document).on('scroll.unable', function(e) {
-                    $(document).scrollTop(top);
-                })
-            }
+            unScroll()
             $('html,body').css({
                 'overflow': 'hidden'
             });
-            unScroll()
+            
         } 
         else {
-            function removeUnScroll() {
-                $(document).unbind("scroll.unable");
-            }
+            
+            removeUnScroll()
             $('html,body').css({
                 'overflow': 'auto'
             });
-            removeUnScroll()
+            
         }
     });
     $("#js-popup-close").click(function() {
         $(".js-navbar__nav").removeClass("js__nav-navbar");
         if ($(".js-navbar__nav").hasClass("js__nav-navbar")) {
-            function unScroll() {
-                var top = $(document).scrollTop();
-                $(document).on('scroll.unable', function(e) {
-                    $(document).scrollTop(top);
-                })
-            }
+           
+            unScroll()
             $('html,body').css({
                 'overflow': 'hidden'
             });
-            unScroll()
+           
         } else {
 
-            function removeUnScroll() {
-                $(document).unbind("scroll.unable");
-            }
+           
+            removeUnScroll()
+
             $('html,body').css({
                 'overflow': 'auto'
             });
-            removeUnScroll()
+            
         }
         $(".search_click_Mask").removeClass("click_Search_Mask")
         $(".header").removeClass("js_header--seach")
         $("#js-search").hide();
 
-        function removeUnScroll() {
-            $(document).unbind("scroll.unable");
+       
+        removeUnScroll()
 
-        }
         $('html,body').css({
             'overflow': 'auto'
         });
@@ -216,16 +204,12 @@ $(document).ready(function() {
             $(".select-close").css("display","block")
             $(".tag_first").text("全部文章");
 
-            function unScroll() {
-                var top = $(document).scrollTop();
-                $(document).on('scroll.unable', function(e) {
-                    $(document).scrollTop(top);
-                })
-            }
+          
+            unScroll()
             $('html,body').css({
                 'overflow': 'hidden'
             });
-            unScroll()
+           
         }
         else{
             $(".select-all").removeClass("select-all_tall")
@@ -234,13 +218,12 @@ $(document).ready(function() {
             $(".select-close").css("display","none")
             $(".tag_first").text($(".tag_active").text());
 
-            function removeUnScroll() {
-                $(document).unbind("scroll.unable");
-            }
+           
+            removeUnScroll()
             $('html,body').css({
                 'overflow': 'auto'
             });
-            removeUnScroll()
+            
         }
         
     })
@@ -258,13 +241,12 @@ $(document).ready(function() {
         0
         );
 
-        function removeUnScroll() {
-            $(document).unbind("scroll.unable");
-        }
+     
+        removeUnScroll()
         $('html,body').css({
             'overflow': 'auto'
         });
-        removeUnScroll()
+        
     })
 
     var headerTag = $(".header-tag").height()
