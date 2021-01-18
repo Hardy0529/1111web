@@ -91,7 +91,7 @@ $(document).ready(function() {
         if ($(".search_click_Mask").hasClass("click_Search_Mask")) {
             $(".search_click_Mask").addClass("click_Search_MaskStyle")
             
-            // 無法滾動
+            // 滾動停止
             unScroll()
             
             // 標籤樣式
