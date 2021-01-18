@@ -9413,6 +9413,10 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   display: none;
 }
 
+.article .header-tag.fixed-header .header-tag_Mobile .select-all {
+  overflow: hidden;
+}
+
 @media screen and (max-width: 1000px) {
   .article .header-tag.fixed-header .header-tag_Mobile {
     display: block;
