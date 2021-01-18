@@ -8230,6 +8230,14 @@ html {
   left: 0;
 }
 
+.header .header_form_seach {
+  display: none;
+}
+
+.header.header_form_seach form {
+  display: block;
+}
+
 .header.js_header--seach {
   background: #f4f4f4;
 }
@@ -8558,6 +8566,10 @@ html {
 
 .nav__icon-group {
   float: left;
+}
+
+.nav__icon-group .icon-search {
+  cursor: pointer;
 }
 
 @media (max-width: 960px) {
@@ -9635,6 +9647,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 }
 
 .select-container .select-box {
+  background: #43484c;
   border: 2px solid #f4f4f4;
   z-index: 1;
 }
@@ -9680,6 +9693,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 }
 
 .select-container .select-close {
+  background: rgba(0, 0, 0, 0.2);
   display: none;
   height: 300vh;
   width: 300vh;

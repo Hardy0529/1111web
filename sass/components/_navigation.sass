@@ -15,7 +15,12 @@
 
 
 // click seach
-.header
+.header 
+  .header_form_seach
+    display: none
+  &.header_form_seach 
+    form
+      display: block
   &.js_header--seach
     background: $color_light-grey
     @media (max-width: 960px)
@@ -25,6 +30,7 @@
             color: $color_primary
       .icon-btn_Text
         color: $color_primary 
+  
     // logo
     .navbar__logo
       h1.logo
@@ -228,6 +234,7 @@
 .nav__icon-group
   float: left
   .icon-search
+    cursor: pointer
     @media (max-width: 960px)
       border: 1px solid $color_grey
       background: rgba( $color_grey ,0.2 )
