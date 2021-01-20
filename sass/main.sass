@@ -29,12 +29,12 @@
 	overflow: hidden
 
 .givePadding
-  padding: 60px 0px 60px 0px
+  padding: 80px 0px 80px 0px
 
 .article-pt_top
-  padding: 0px 0px 60px 0px
-  @media (max-width: 740px)
-    padding: 40px 0px 60px 0px
+  padding: 0px 0px 80px 0px
+  // @media (max-width: 740px)
+  //   padding: 0px 0px 60px 0px
 
 
 
@@ -107,42 +107,54 @@
 
 
 .article
+  .tag-Outer_layer
+    margin-top: 40px
+    padding: 40px 0px 30px 0px
+    // background-color: none
+    margin-bottom: 20px
   .header-tag-container
-    margin-bottom: 80px
-  .header-tag.fixed-header 
-    position: fixed
-    top: 80px
-    left: 0
-    width: 100%
-    z-index: 10
-    transition: .5s
-    padding: 0
-    .header-tag_pc
-      @media screen and ( max-width:  1000px)
-        display: none
-    .header-tag_Mobile
-      display: none
-      #select-all
-        overflow: hidden
-      @media screen and ( max-width:  1000px)
-        display: block
-    @media screen and ( max-width:  1000px)
+  .header-tag
+    &.fixed-header 
+      position: fixed
       top: 80px
-      padding-top: 8px
-      padding-bottom: 8px
-    @media screen and ( max-width:  767px)
-      top: 58px
-      padding-top: 8px
-      padding-bottom: 8px
-    .class-nav
-      border-top: none
-      margin-bottom: 10px
+      left: 0
+      width: 100%
+      z-index: 10
+      transition: .5s
+      padding: 0
+      background-color: $color_secondary
+      h3
+        margin: 0
+        color: rgba($color_white , 0.75) !important
+        font-size: 16px
+        transition: 0.3s
+        &:hover
+          color: rgba($color_white , 1) !important
+      .header-tag_pc
+        @media screen and ( max-width:  1020px)
+          display: none
+      .header-tag_Mobile
+        display: none
+        #select-all
+          overflow: hidden
+        @media screen and ( max-width:  1020px)
+          display: block
+      @media screen and ( max-width:  1020px)
+        top: 80px
+        padding-top: 8px
+        padding-bottom: 8px
+      @media screen and ( max-width:  767px)
+        top: 58px
+        padding-top: 8px
+        padding-bottom: 8px
+      .class-nav
+        border-top: none
+        margin-bottom: 10px
+  
   .header-tag 
-    background-color: $color_secondary
     box-sizing: border-box
     color: $color_light-grey
     overflow: hidden
-    padding: 3rem 0 2rem 0
     position: relative
     width: 100%
     transition: all .25s ease-in-out  
@@ -176,10 +188,20 @@
       text-align: center
   .subtitle
     color: $color_secondary
+    padding-bottom: 6px
+    margin-bottom: 40px
+    // &::before
+    //   content: ""
+    //   position: absolute
+    //   bottom: 0
+    //   left: 0
+    //   width: 60px
+    //   height: 3px
+    //   background-color: $color_primary
   .class-nav 
     display: block
     border: 0
-    border-top: 1px solid #d1d2d3
+    border-top: 1px solid $color_grey
     padding: 0
     margin-bottom: 0px
     nav 
@@ -192,9 +214,6 @@
       @media screen and ( max-width:  940px)
         +flex 
         flex-wrap: wrap
-      @media screen and ( max-width:  660px)
-        height: 48px
-        overflow: hidden
      
       .category-title,.category-classify
         display: inline-block
@@ -224,32 +243,25 @@
 
         h3
           margin: 0
-          color: rgba($color_white , 0.75)
+          color: rgba($color_secondary , 0.75)
           font-size: 16px
           transition: 0.3s
           &:hover
-            color: rgba($color_white , 1)
+            color: rgba($color_secondary , 1)
         @media screen and ( min-width:  941px)
           h3
             line-height: 48px
             margin: 0
-            color: rgba($color_white , 0.75)
+            color: rgba(black , 1)
             font-size: 16px
             transition: 0.3s
             +center
             white-space: nowrap
             &:hover
-              font-size: 20px
-              color: rgba($color_white , 1)
-    @media screen and ( max-width:  660px)
-      .btn_category
-        padding-top: 20px
-        @media screen and ( max-width:  767px)
-          padding-top: 0px
+              font-size: 18px
+              color: rgba($color_secondary , 1)
     .btn
       display: none
-      @media screen and ( max-width:  660px)
-        display: block
       span
         display: inline-block
       
@@ -301,3 +313,13 @@
     left: 50%
     top: 50%
     transform: translate(-50%, -50%)
+
+
+/*-------------------------*/
+/* $footer
+/*-------------------------*/
+
+
+footer
+  section#footer
+    padding: 6.250rem 0
