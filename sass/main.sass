@@ -323,3 +323,40 @@
 footer
   section#footer
     padding: 6.250rem 0
+
+
+// 麵包
+.bread-crumbs
+  background-color: transparent
+  ul.breadcrumb,ol.breadcrumb
+    margin-top: 0px
+    list-style: none
+    padding: 12px 16px
+    margin-bottom: 16px
+    display: flex
+    .breadcrumb-item
+      font-size: 18.4px
+      line-height: 1.5
+      font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif
+      color: #102542
+      font-weight: 300
+      &.active
+        color: #6c757d
+        font-weight: 300
+        font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif
+        line-height: 1.5
+      a
+        color: rgb(0, 190, 164)
+        transition: all .3s
+    
+    .breadcrumb-item+.breadcrumb-item 
+      padding-left: .5rem
+    .breadcrumb-item+.breadcrumb-item::before 
+      display: inline-block
+      padding-right: .5rem
+      color: #6c757d
+      content: "/"
+
+
+
+

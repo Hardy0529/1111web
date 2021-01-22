@@ -3848,7 +3848,7 @@ html {
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
-  max-width: 1200px;
+  max-width: 1170px;
 }
 
 .container-fluid {
@@ -9700,4 +9700,43 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 /*-------------------------*/
 footer section#footer {
   padding: 6.250rem 0;
+}
+
+.bread-crumbs {
+  background-color: transparent;
+}
+
+.bread-crumbs ul.breadcrumb, .bread-crumbs ol.breadcrumb {
+  margin-top: 0px;
+  list-style: none;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.bread-crumbs ul.breadcrumb .breadcrumb-item, .bread-crumbs ol.breadcrumb .breadcrumb-item {
+  font-size: 18.4px;
+  line-height: 1.5;
+  font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif;
+  color: #102542;
+  font-weight: 300;
+}
+
+.bread-crumbs ul.breadcrumb .breadcrumb-item a, .bread-crumbs ol.breadcrumb .breadcrumb-item a {
+  color: #00bea4;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+}
+
+.bread-crumbs ul.breadcrumb .breadcrumb-item + .breadcrumb-item, .bread-crumbs ol.breadcrumb .breadcrumb-item + .breadcrumb-item {
+  padding-left: .5rem;
+}
+
+.bread-crumbs ul.breadcrumb .breadcrumb-item + .breadcrumb-item::before, .bread-crumbs ol.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+  display: inline-block;
+  padding-right: .5rem;
+  color: #6c757d;
+  content: "/";
 }
