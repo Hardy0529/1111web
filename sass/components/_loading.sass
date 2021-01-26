@@ -55,8 +55,8 @@
     position: relative
     border-radius: 0%
     border: 10px solid rgba( #071f38 ,0 )
-    -webkit-animation: leloading-Outer_layer 2.5s  forwards
-    animation: leloading-Outer_layer 2.5s  forwards
+    -webkit-animation: loading-Outer_layer 2.5s  forwards
+    animation: loading-Outer_layer 2.5s  forwards
     animation-delay: 1s
     >span
       max-height: 140px
@@ -197,17 +197,18 @@
   transition: 0.5s
   img
     width: 100%
-
+    height: 154.58px
 
 
 // Loading Text 
 .loading-Text
-  position: absolute
+  // position: absolute
   bottom: 10px
+  margin-top: -10px
   transform: rotate(-2deg)
   span
     font-weight: bold
-    font-size: 14px
+    font-size: 16px
     &:nth-child(1)
       opacity: 0
       visibility: visible

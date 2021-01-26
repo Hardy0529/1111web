@@ -7718,8 +7718,8 @@ html {
   position: relative;
   border-radius: 0%;
   border: 10px solid rgba(7, 31, 56, 0);
-  -webkit-animation: leloading-Outer_layer 2.5s  forwards;
-  animation: leloading-Outer_layer 2.5s  forwards;
+  -webkit-animation: loading-Outer_layer 2.5s  forwards;
+  animation: loading-Outer_layer 2.5s  forwards;
   -webkit-animation-delay: 1s;
           animation-delay: 1s;
 }
@@ -7945,18 +7945,19 @@ html {
 
 .loading-Text_Img img {
   width: 100%;
+  height: 154.58px;
 }
 
 .loading-Text {
-  position: absolute;
   bottom: 10px;
+  margin-top: -10px;
   -webkit-transform: rotate(-2deg);
           transform: rotate(-2deg);
 }
 
 .loading-Text span {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .loading-Text span:nth-child(1) {
@@ -8260,7 +8261,7 @@ html {
 
 .header.js_header--seach .navbar__logo h1.logo svg {
   padding-top: 10px;
-  width: 178.23px;
+  width: 177.70px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -8283,7 +8284,7 @@ html {
 
 .header.js_header--seach .navbar__logo h1.logo_Mobile svg {
   padding-top: 15px;
-  width: 178.23px;
+  width: 177.70px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -8346,7 +8347,7 @@ html {
 
 .header.header--scrolling .navbar__logo h1.logo svg {
   padding-top: 10px;
-  width: 178.23px;
+  width: 177.70px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -8369,7 +8370,7 @@ html {
 
 .header.header--scrolling .navbar__logo h1.logo_Mobile svg {
   padding-top: 15px;
-  width: 178.23px;
+  width: 177.70px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -8426,6 +8427,7 @@ html {
   -webkit-transition: all 0.8s;
   transition: all 0.8s;
   padding-bottom: 0px;
+  float: left;
 }
 
 @media (max-width: 960px) {
@@ -8437,7 +8439,7 @@ html {
 }
 
 .navbar__logo h1.logo {
-  width: 178.23px;
+  width: 177.70px;
   margin: 0px;
   padding: 0px;
   text-align: center;
@@ -8455,7 +8457,7 @@ html {
 }
 
 .navbar__logo h1.logo_Mobile {
-  width: 178.23px;
+  width: 177.70px;
   margin: 0px;
   padding: 0px;
   text-align: center;
@@ -8480,6 +8482,7 @@ html {
 
 .navbar__logo h1 svg {
   padding-top: 10px;
+  height: 71.81px;
 }
 
 .navbar__logo h1 svg .cls-1 {
@@ -8496,14 +8499,14 @@ html {
 
 @media (max-width: 767px) {
   .navbar__logo h1 svg {
+    height: 49.11px;
     padding-top: 8px;
   }
 }
 
 .nav {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: relative;
+  float: right;
 }
 
 @media (max-width: 960px) {
@@ -8707,7 +8710,8 @@ html {
     visibility: hidden;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
-    z-index: 1001;
+    height: 100vh;
+    z-index: 10;
   }
   #overlay:target {
     opacity: 1;
@@ -8715,7 +8719,7 @@ html {
   }
   .popup-nav .nav__menu {
     float: none;
-    padding-top: 56px;
+    padding-top: 95px;
   }
   .popup-nav .nav__menu li {
     float: none;
@@ -8732,13 +8736,14 @@ html {
   /* popup-close */
   .popup-close {
     position: absolute;
-    top: 0;
+    top: 35px;
     right: 0;
     width: 56px;
     height: 56px;
     display: inline-block;
     padding: 12px;
     padding-top: 16px;
+    z-index: 100;
   }
   .popup-close span {
     height: 3px;
@@ -9702,11 +9707,12 @@ footer section#footer {
   padding: 6.250rem 0;
 }
 
-.bread-crumbs {
+.breadcrumbs {
+  margin-top: 5px;
   background-color: transparent;
 }
 
-.bread-crumbs ul.breadcrumb, .bread-crumbs ol.breadcrumb {
+.breadcrumbs ul.breadcrumb, .breadcrumbs ol.breadcrumb {
   margin-top: 0px;
   list-style: none;
   padding: 12px 16px;
@@ -9716,25 +9722,32 @@ footer section#footer {
   display: flex;
 }
 
-.bread-crumbs ul.breadcrumb .breadcrumb-item, .bread-crumbs ol.breadcrumb .breadcrumb-item {
+.breadcrumbs ul.breadcrumb .breadcrumb-item, .breadcrumbs ol.breadcrumb .breadcrumb-item {
   font-size: 18.4px;
   line-height: 1.5;
   font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif;
-  color: #102542;
+  color: #6c757d;
   font-weight: 300;
 }
 
-.bread-crumbs ul.breadcrumb .breadcrumb-item a, .bread-crumbs ol.breadcrumb .breadcrumb-item a {
+.breadcrumbs ul.breadcrumb .breadcrumb-item.active, .breadcrumbs ol.breadcrumb .breadcrumb-item.active {
+  color: #6c757d;
+  font-weight: 300;
+  font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif;
+  line-height: 1.5;
+}
+
+.breadcrumbs ul.breadcrumb .breadcrumb-item a, .breadcrumbs ol.breadcrumb .breadcrumb-item a {
   color: #00bea4;
   -webkit-transition: all .3s;
   transition: all .3s;
 }
 
-.bread-crumbs ul.breadcrumb .breadcrumb-item + .breadcrumb-item, .bread-crumbs ol.breadcrumb .breadcrumb-item + .breadcrumb-item {
+.breadcrumbs ul.breadcrumb .breadcrumb-item + .breadcrumb-item, .breadcrumbs ol.breadcrumb .breadcrumb-item + .breadcrumb-item {
   padding-left: .5rem;
 }
 
-.bread-crumbs ul.breadcrumb .breadcrumb-item + .breadcrumb-item::before, .bread-crumbs ol.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+.breadcrumbs ul.breadcrumb .breadcrumb-item + .breadcrumb-item::before, .breadcrumbs ol.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
   display: inline-block;
   padding-right: .5rem;
   color: #6c757d;
