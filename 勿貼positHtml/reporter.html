@@ -1,195 +1,4 @@
-﻿<%Response.Buffer=True:Response.charset="utf-8":Session.CodePage=65001 'Power By Jason 2020/08/14%>
-<!--#include virtual="/includesU/trustIP.asp"-->
-<!--#includes virtual="/includesU/job-index-param.asp"-->
-<%
-tran=Request.QueryString("tran") '轉檔用
-posit=Request.QueryString("posit")
-If tran="" and posit<>"" Then
-    Server.Transfer "positHtml/"&posit&".asp"
-    Response.End()
-End If
-'高薪職缺
-KS="軟體工程師"
-IRules="salarytype=1&salary0=35000~*" '條件
-indexD=2:indexS="true":indexF="true" '找工作:同義:模糊
-searchC="position0" '關鍵字搜尋欄位
-indexC="employeeNo,organNo,oorgan,oshowfield,position0,experience,matchItem,grade,otrade,salary,matter,dateChange,workcity" '結果欄位
-ISort="ooSort asc,recruits desc,datein desc"
-PS=8:Page=1:htmlslide=""
-Call returnIntumit(indexD,indexC,1,IRules,ISort,KS,searchC,indexS,indexF,PS,Page):SCount=IntumitTotalCount '結果
-If SCount>0 Then 
-    arrI=arrIntumitIndex 
-    ICount=UBound(arrI,2)
-    For ii=0 To ICount
-        If arrI(0,ii)<>"" Then
-            IeNo=arrI(0,ii) '職編
-            IoNo=arrI(1,ii) '廠編
-            Iorgan=arrI(2,ii) '廠名
-            IshowField=arrI(3,ii):If IshowField="" Or Not IsNumeric(IshowField) Then IshowField=0 '客製顯示
-            If (clng(IshowField) And 8)=8 Then Iorgan="(派遣)"&Iorgan Else If (clng(IshowField) And 16)=16 Then Iorgan="(代招)"&Iorgan Else If (clng(IshowField) And 2048)=2048 Then Iorgan="(獵頭)"&Iorgan '特殊廠商
-            Iposition=arrI(4,ii) '職缺名
-            If Instr(Iposition,"amp")>0 And Instr(Iposition,";")>0 And Instr(Iposition,"&")>0 Then Iposition=Replace(Replace(Replace(Iposition,"<em>",""),"</em>",""),"amp;","") 'amp關鍵字處理
-            Iexper=chkArray(aExperienceO,arrI(5,ii),0):Iexperience=Iexper&"以上" '工作經驗   
-            Imatch=arrI(6,ii):If Iexper="" Then Iexperience="經驗不拘" Else If arrI(5,ii)="1" and (Imatch and 1)=0 Then Iexperience=Iexper&"可" Else If (Imatch and 1)=1 Then Iexperience="限定 "&Iexper Else If (Imatch and 2)=2 Then Iexperience=Iexper&"以下" Else Iexperience=Iexper&"以上" '經驗限制
-            Igrade=""
-            for g=0 to ubound(aoGrade) 
-                if (arrI(7,ii) and cint(split(aoGrade(g),"_")(0))) = cint(split(aoGrade(g),"_")(0)) then 
-                    Igrade=Igrade & chkArray(aoGrade,cint(split(aoGrade(g),"_")(0)),0) &"、"
-                end if
-            next
-            Igrade=RepRight(Igrade,"、"):If Igrade="" Then Igrade="學歷不拘"
-            ItradeNo=arrI(8,ii):Itrade=ArrayChange(1,2,ItradeNo,"tCodeTrade",11) '行業類別
-            Isalary=arrI(9,ii):Is0="":Is1="":Is2="" '薪資
-            if instr(Isalary,"‧")>0 then
-                arrIS=Split(Isalary,"‧")
-                If InStr(arrIS(0),"不支薪")>0 or (InStr(arrIS(0),"48")>0 and InStr(arrIS(0),"年含以上）")>0) Then 
-                    Isalary= arrIS(0)
-                ElseIf InStr(arrIS(0),"面議")>0 Then 
-                    Isalary= "面議（經常性薪資4萬/月含以上）"
-                Else
-                    If UBound(arrIS)=2 Then Is0=arrIS(0):Is1=Formatnumbers(arrIS(1),0):Is2=Formatnumbers(arrIS(2),0):Erase arrIS:Isalary=Is0&" "&Is1&"元":If (cLng(Imatch) and 65536)=65536 Then Isalary=Isalary&" 以上" Else If Is2<>"" And Is2<>"0" And Is1<>Is2 Then Isalary=Is0&" "&Is1&"~"&Is2&"元" '非面議
-                End If
-            Else
-                Isalary= "面議（經常性薪資4萬/月含以上）"
-            end if
-            Imatter=arrI(10,ii):Imatter=iif(Imatter="",Iposition,Imatter)
-            IdateChange=arrI(11,ii):IdateExpire=IdateChange:If IsDate(IdateChange) Then IdateChange=Year(IdateChange)&"-"&Right(Month(IdateChange)+100,2)&"-"&Right(Day(IdateChange)+100,2):IdateExpire=dateadd("yyyy",1,IdateChange) '更新日期
-            IcityCode=arrI(12,ii):If IcityCode="" Or Not IsNumeric(IcityCode) Then IcityCode=0 '工作地代碼
-            IworkCity="不拘":IworkCountry="":IworkZip="":If ArrayChange(1,2,IcityCode,"tCodeCity",11) <> "" Then IworkCountry=Replace(ArrayChange(1,2,IcityCode,"tCodeCity",13),"地區",""):If clng(IcityCode/10000)=10 Or clng(IcityCode/10000)=11 Then IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",14):IworkZip=iif(clng(IcityCode/10000)=10,chkArray(aZip,IcityCode,0),"") Else IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",11) '工作地名稱
-            SchemaWorkCity=IworkCity
-            ILinkOSchema="https://www.1111.com.tw/corp/"&IoNo&"/?agent=home_position_schema_sales" '結構化標記用
-            ILinkESchema="https://www.1111.com.tw/job/"&IeNo&"/?agent=home_position_schema_sales" '結構化標記用
-            schemadescription=Imatter:schemadescription=iif(schemadescription="",Iposition,schemadescription)
-
-            htmlslide=htmlslide&_
-            "<div class=""swiper-slide"">"&_
-            "    <div class=""card"">"&_
-            "        <div class=""card-body"">"&_
-            "            <a class=""stretched-link"" href=""/job/"&IeNo&"/"" target=""_blank""></a>"&_
-            "            <h4 class=""jobTitle card-title"">"&Iposition&"</h4>"&_
-            "            <p class=""card-text cmpName""><span class=""cmp"">"&Iorgan&"</span> | <span class=""cmpTrade"">"&Itrade&"</span></p>"&_
-            "            <p class=""jobSalary card-text"">"&Isalary&"</p>"&_
-            "            <p class=""card-text story""><span class=""exp"">"&Iexperience&"</span> | <span class=""gr"">"&Igrade&"</span></p>"&_
-            "            <p class=""jobContent card-text"">"&Imatter&"</p>"&_
-            "        </div>"&_
-            "    </div>"&_
-            "</div>"
-            htmlslide=htmlslide&_
-            "<script  type=""application/ld+json"">"&_
-            "    {"&_
-            "        ""@context"": ""http://schema.org"","&_
-            "        ""@type"": ""Event"","&_
-            "        ""startDate"": """&IdateChange&""","&_
-            "        ""name"": """&FilterSEO(Iposition)&""","&_
-            "        ""eventAttendanceMode"": ""https://schema.org/OnlineEventAttendanceMode"","&_
-            "        ""eventStatus"": ""EventScheduled"","&_
-            "        ""organizer"": {"&_
-            "            ""name"": ""1111人力銀行"","&_
-            "            ""url"": ""https://www.1111.com.tw"""&_
-            "        },"&_
-            "        ""location"": {"&_
-            "            ""@type"": ""Place"","&_
-            "            ""name"": """&SchemaWorkCity&""","&_
-            "            ""address"": {"&_
-            "                ""@type"": ""PostalAddress"","&_
-            "                ""postalCode"": """&iif(IworkZip="",0,IworkZip)&""""&_
-            "            }"&_
-            "        },"&_
-            "        ""performer"": {"&_
-            "            ""@type"": ""Organization"","&_
-            "            ""url"": """&ILinkOSchema&""","&_
-            "            ""name"": """&FilterSEO(Iorgan)&""""&_
-            "        },"&_
-            "        ""description"": """&FilterSEO(schemadescription)&""","&_
-            "        ""image"": ""https://images.1111.com.tw/oad/1355006.jpg"","&_
-            "        ""url"": """&ILinkESchema&""","&_
-            "        ""offers"": {"&_
-            "            ""@type"": ""Offer"","&_
-            "            ""availability"": ""https://schema.org/InStock"","&_
-            "            ""price"": ""0"","&_
-            "            ""priceCurrency"": ""TWD"","&_
-            "            ""validFrom"": """&IdateChange&""","&_
-            "            ""url"": """&ILinkESchema&""""&_
-            "        }"&_
-            "    }"&_
-            "</script>"
-        End If
-    Next
-    htmlslide=htmlslide&"<div class=""swiper-slide""><a class=""moreLink"" href=""/search/job?ks="&KS&""">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>"
-End If
-'最新職缺
-ISort="ooSort asc,score desc,datein desc"
-htmlslide2=""
-Call returnIntumit(indexD,indexC,1,IRules,ISort,KS,searchC,indexS,indexF,PS,Page):SCount=IntumitTotalCount '結果
-If SCount>0 Then 
-    arrI=arrIntumitIndex 
-    ICount=UBound(arrI,2)
-    For ii=0 To ICount
-        If arrI(0,ii)<>"" Then
-            IeNo=arrI(0,ii) '職編
-            IoNo=arrI(1,ii) '廠編
-            Iorgan=arrI(2,ii) '廠名
-            IshowField=arrI(3,ii):If IshowField="" Or Not IsNumeric(IshowField) Then IshowField=0 '客製顯示
-            If (clng(IshowField) And 8)=8 Then Iorgan="(派遣)"&Iorgan Else If (clng(IshowField) And 16)=16 Then Iorgan="(代招)"&Iorgan Else If (clng(IshowField) And 2048)=2048 Then Iorgan="(獵頭)"&Iorgan '特殊廠商
-            Iposition=arrI(4,ii) '職缺名
-            If Instr(Iposition,"amp")>0 And Instr(Iposition,";")>0 And Instr(Iposition,"&")>0 Then Iposition=Replace(Replace(Replace(Iposition,"<em>",""),"</em>",""),"amp;","") 'amp關鍵字處理
-            Iexper=chkArray(aExperienceO,arrI(5,ii),0):Iexperience=Iexper&"以上" '工作經驗   
-            Imatch=arrI(6,ii):If Iexper="" Then Iexperience="經驗不拘" Else If arrI(5,ii)="1" and (Imatch and 1)=0 Then Iexperience=Iexper&"可" Else If (Imatch and 1)=1 Then Iexperience="限定 "&Iexper Else If (Imatch and 2)=2 Then Iexperience=Iexper&"以下" Else Iexperience=Iexper&"以上" '經驗限制
-            Igrade=""
-            for g=0 to ubound(aoGrade) 
-                if (arrI(7,ii) and cint(split(aoGrade(g),"_")(0))) = cint(split(aoGrade(g),"_")(0)) then 
-                    Igrade=Igrade & chkArray(aoGrade,cint(split(aoGrade(g),"_")(0)),0) &"、"
-                end if
-            next
-            Igrade=RepRight(Igrade,"、"):If Igrade="" Then Igrade="學歷不拘"
-            ItradeNo=arrI(8,ii):Itrade=ArrayChange(1,2,ItradeNo,"tCodeTrade",11) '行業類別
-            Isalary=arrI(9,ii):Is0="":Is1="":Is2="" '薪資
-            if instr(Isalary,"‧")>0 then
-                arrIS=Split(Isalary,"‧")
-                If InStr(arrIS(0),"不支薪")>0 or (InStr(arrIS(0),"48")>0 and InStr(arrIS(0),"年含以上）")>0) Then 
-                    Isalary= arrIS(0)
-                ElseIf InStr(arrIS(0),"面議")>0 Then 
-                    Isalary= "面議（經常性薪資4萬/月含以上）"
-                Else
-                    If UBound(arrIS)=2 Then Is0=arrIS(0):Is1=Formatnumbers(arrIS(1),0):Is2=Formatnumbers(arrIS(2),0):Erase arrIS:Isalary=Is0&" "&Is1&"元":If (cLng(Imatch) and 65536)=65536 Then Isalary=Isalary&" 以上" Else If Is2<>"" And Is2<>"0" And Is1<>Is2 Then Isalary=Is0&" "&Is1&"~"&Is2&"元" '非面議
-                End If
-            Else
-                Isalary= "面議（經常性薪資4萬/月含以上）"
-            end if
-            Imatter=arrI(10,ii):Imatter=iif(Imatter="",Iposition,Imatter)
-            IdateChange=arrI(11,ii):IdateExpire=IdateChange:If IsDate(IdateChange) Then IdateChange=Year(IdateChange)&"-"&Right(Month(IdateChange)+100,2)&"-"&Right(Day(IdateChange)+100,2):IdateExpire=dateadd("yyyy",1,IdateChange) '更新日期
-            IcityCode=arrI(12,ii):If IcityCode="" Or Not IsNumeric(IcityCode) Then IcityCode=0 '工作地代碼
-            IworkCity="不拘":IworkCountry="":IworkZip="":If ArrayChange(1,2,IcityCode,"tCodeCity",11) <> "" Then IworkCountry=Replace(ArrayChange(1,2,IcityCode,"tCodeCity",13),"地區",""):If clng(IcityCode/10000)=10 Or clng(IcityCode/10000)=11 Then IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",14):IworkZip=iif(clng(IcityCode/10000)=10,chkArray(aZip,IcityCode,0),"") Else IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",11) '工作地名稱
-            SchemaWorkCity=IworkCity
-            ILinkOSchema="https://www.1111.com.tw/corp/"&IoNo&"/" '結構化標記用
-            ILinkESchema="https://www.1111.com.tw/job/"&IeNo&"/" '結構化標記用
-            schemadescription=Imatter:schemadescription=iif(schemadescription="",Iposition,schemadescription)
-
-            htmlslide2=htmlslide2&_
-            "<div class=""swiper-slide"">"&_
-            "    <div class=""card"">"&_
-            "        <div class=""card-body"">"&_
-            "            <a class=""stretched-link"" href=""/job/"&IeNo&"/"" target=""_blank""></a>"&_
-            "            <h4 class=""jobTitle card-title"">"&Iposition&"</h4>"&_
-            "            <p class=""card-text cmpName""><span class=""cmp"">"&Iorgan&"</span> | <span class=""cmpTrade"">"&Itrade&"</span></p>"&_
-            "            <p class=""jobSalary card-text"">"&Isalary&"</p>"&_
-            "            <p class=""card-text story""><span class=""exp"">"&Iexperience&"</span> | <span class=""gr"">"&Igrade&"</span></p>"&_
-            "            <p class=""jobContent card-text"">"&Imatter&"</p>"&_
-            "        </div>"&_
-            "    </div>"&_
-            "</div>"
-        End If
-    Next
-    htmlslide2=htmlslide2&"<div class=""swiper-slide""><a class=""moreLink"" href=""/search/job?gr=16&ks="&KS&""">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>"
-End If
-%>
-<%
-title = "轉職軟體工程師攻略 只要作對這些事，高薪未來不是夢"
-description = "軟體工程師職涯前景看好且薪資傲人，是求職或轉職的熱門目標，坊間也有許多相關補習班，但業內真相卻是薪資落差極大！同樣是寫程式，究竟能夠領高薪的佼佼者在職涯中，做對了哪些事？"
-shareimg = "https://www.1111.com.tw/position/img/shareimg.jpg"
-url = "https://www.1111.com.tw/position/software-engineer/"
-%>
-
+﻿
 <!DOCTYPE html>
 <html  lang="zh-Hant-TW">
 
@@ -199,39 +8,35 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>轉職軟體工程師攻略 只要作對這些事，高薪未來不是夢</title>
+<title>20年資深媒體人，分享記者必備4大職能重點</title>
 <meta name="robots" content="index,follow" />
-
-
-<meta name="title" content="轉職軟體工程師攻略 只要作對這些事，高薪未來不是夢" />
+<meta name="title" content="20年資深媒體人，分享記者必備4大職能重點" />
 <meta name="keywords" content="" />
-<meta name="description" content="軟體工程師職涯前景看好且薪資傲人，是求職或轉職的熱門目標，坊間也有許多相關補習班，但業內真相卻是薪資落差極大！同樣是寫程式，究竟能夠領高薪的佼佼者在職涯中，做對了哪些事？">
-
-
+<meta name="description" content="主流媒體日漸衰微，因網路無遠弗屆，自媒體新聞網站及各種社群平台輩出，20年記者資歷的何啟聖說：『現在傳統的報章雜誌等平面媒體記者生態，正面臨著的大風大浪改變。』">
 <meta name="company" content="全球華人股份有限公司">
 <meta name="copyright" content="全球華人股份有限公司©版權所有">
 <meta name="author" content="1111人力銀行 | 全球華人股份有限公司">
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="zh_TW" />
-<meta property="og:title" content="轉職軟體工程師攻略 只要作對這些事，高薪未來不是夢" />
-<meta property="og:url" content="https://www.1111.com.tw/position/software-engineer/" />
-<meta property="og:image" content="https://www.1111.com.tw/position/img/software-engineer.jpg" />
-<meta property="og:description" content="軟體工程師職涯前景看好且薪資傲人，是求職或轉職的熱門目標，坊間也有許多相關補習班，但業內真相卻是薪資落差極大！同樣是寫程式，究竟能夠領高薪的佼佼者在職涯中，做對了哪些事？" />
-<meta name="twitter:title" content="轉職軟體工程師攻略 只要作對這些事，高薪未來不是夢" />
-<meta name="twitter:description" content="軟體工程師職涯前景看好且薪資傲人，是求職或轉職的熱門目標，坊間也有許多相關補習班，但業內真相卻是薪資落差極大！同樣是寫程式，究竟能夠領高薪的佼佼者在職涯中，做對了哪些事？" />
+<meta property="og:title" content="20年資深媒體人，分享記者必備4大職能重點" />
+<meta property="og:url" content="https://www.1111.com.tw/position/reporter/" />
+<meta property="og:image" content="https://www.1111.com.tw/position/img/share_reporter.jpg" />
+<meta property="og:description" content="主流媒體日漸衰微，因網路無遠弗屆，自媒體新聞網站及各種社群平台輩出，20年記者資歷的何啟聖說：『現在傳統的報章雜誌等平面媒體記者生態，正面臨著的大風大浪改變。』" />
+<meta name="twitter:title" content="20年資深媒體人，分享記者必備4大職能重點" />
+<meta name="twitter:description" content="主流媒體日漸衰微，因網路無遠弗屆，自媒體新聞網站及各種社群平台輩出，20年記者資歷的何啟聖說：『現在傳統的報章雜誌等平面媒體記者生態，正面臨著的大風大浪改變。』" />
 <meta name="twitter:keywords" content="" />
-<meta name="twitter:url" content="https://www.1111.com.tw/position/software-engineer/" />
-<meta name="twitter:image" content="https://www.1111.com.tw/position/img/software-engineer.jpg">
+<meta name="twitter:url" content="https://www.1111.com.tw/position/reporter/" />
+<meta name="twitter:image" content="https://www.1111.com.tw/position/img/share_reporter.jpg">
 <meta property="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://www.1111.com.tw/position/software-engineer/" />
-<link rel="stylesheet" href="/position/css/bootstrap.min.css">
+<link rel="canonical" href="https://www.1111.com.tw/position/reporter/" />
+<link rel="stylesheet" href="../css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,200,300,400,500,600,700,900&amp;display=swap"> -->
 <link href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="/position/css/common.css?v=20201223">
-<script src="/position/js/jquery-1.11.1.min.js"></script>
-<script src="/position/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="../css/common.css?v=20201223">
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
 <script type="application/ld+json">
@@ -240,11 +45,11 @@ url = "https://www.1111.com.tw/position/software-engineer/"
         "@type": "BreadcrumbList",
         "itemListElement": [
             { "@type": "ListItem","position": 1,"item": { "@id": "https://www.1111.com.tw/position/", "name": "首頁" } },
-            { "@type": "ListItem","position": 2,"item": { "@id": "https://www.1111.com.tw/position/software-engineer/", "name": "業務" } }                
+            { "@type": "ListItem","position": 2,"item": { "@id": "https://www.1111.com.tw/position/reporter/", "name": "業務" } }                
         ]
     }
 </script>
-    <link rel="stylesheet" href="/position/css/page-style.css?v=20201223">
+    <link rel="stylesheet" href="../css/page-style.css?v=20201223">
 </head>
 
 <body>
@@ -322,9 +127,8 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 			</form>
 			<div id="search_click_Mask"></div>
 		</header>	
-		<!-- End header -->	
-
 		<!-- End header -->
+
         <header>
             <a href="#category" data-toggle="collapse" class="category d-none d-sm-none d-md-none d-lg-block "><i
                     class="fas fa-list-ul"></i> 目錄</a>
@@ -333,430 +137,140 @@ url = "https://www.1111.com.tw/position/software-engineer/"
             <ul id="category" class="collapse">
                 <li>
                     <a href="#section1">
-                        寫程式只是基礎，軟體工程師日常在做什麼？
+                        時移勢遷的記者一職
                     </a>
                 </li>
                 <li>
                     <a href="#section2">
-                        軟體工程師的分類多，專長方向大不同
+                        資訊爆炸的時代，如何做「好記者」?
                     </a>
                 </li>
                 <li>
                     <a href="#section3">
-                        出社會之後應該如何轉職成軟體工程師
+                        不要失去好奇心更不要停止充實自己
                     </a>
                 </li>
                 <li>
                     <a href="#section4">
-                        轉職者怎麼樣規劃面試
+                        台灣媒體的畸形
                     </a>
                 </li>
                 <li>
                     <a href="#section5">
-                        軟體工程師薪資大解密！低薪高薪差異在哪?
+                        人人都能是記者
                     </a>
-                </li>  
+                </li>         
             </ul>
 
         </header>
-        
         <!-- / 導航列? -->
-        <section class="breadcrumbs givePadding">
+        <section class="breadcrumbs">
             <div class="container">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="http://192.168.1.234/position/index-profession-dictionary.asp">首頁</a></li>
                         <li class="breadcrumb-item"><a href="http://192.168.1.234/position/catagory.asp">求職密技</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">軟體工程師</li>
-                        </ul>
+                        <li class="breadcrumb-item active" aria-current="page">記者</li>
+                    </ol>
                 </nav>
                 <!-- / 麵包屑 -->
             </div>
         </section>
+
         <section>
             <div class="container">
-                <h1>轉職軟體工程師攻略  只要作對這些事，高薪未來不是夢</h1>
-                
+                <h1>20年資深媒體人，分享記者必備4大職能重點</h1>
+                <p class="text-left"><span class="article-author"> 文 / 廖宇盈</span>     <span class="article-tag"><a href="http://192.168.1.234/position/catagory.asp"><i class="fas fa-tags"></i>求職密技</a></span> </p>
+               
+                <blockquote cite="">主流媒體日漸衰微，因網路無遠弗屆，自媒體新聞網站及各種社群平台輩出，20年記者資歷的何啟聖說：『現在傳統的報章雜誌等平面媒體記者生態，正面臨著的大風大浪改變。』</blockquote>
                 <figure class="text-center">
-                    <img class="img-fluid d-block img_center" src="/position/img/software-engineer.jpg"
-                        alt="軟體工程師">
+                    <img class="img-fluid" src="../img/reporter.jpg" alt="記者採訪示意圖">    
                 </figure>
-                <p class="text-left"><span class="article-author"> 文 / 唐鴻</span>     <span class="article-tag"><a href="http://192.168.1.234/position/catagory.asp"><i class="fas fa-tags"></i>求職密技</a></span> </p>
-               
-                <blockquote cite="">軟體工程師職涯前景看好且薪資傲人，是求職或轉職的熱門目標，坊間也有許多相關補習班，但業內真相卻是薪資落差極大！同樣是寫程式，究竟能夠領高薪的佼佼者在職涯中，做對了哪些事？</blockquote>
-               
+                <p>&emsp;&emsp;近年來，記者多被評為「最糟糕職業」，但還是會有希望以「報導」改變世界的人選擇成為記者。據<a class="link" href="https://www.jobsalary.com.tw/salarysummary.aspx?codeNo=190117" target="_blank">薪資公秤</a>的文字記者職務定義：透過<strong>訪問或調查方法蒐集重要事件之訊息並查證之，以撰寫新聞稿件</strong>，提供新聞紙、雜誌、廣播或電視臺報導。
+                </p>                
+                <h2 id="section1" class="text-center">時移勢遷的記者一職</h2>
                 <p class="mb-for-first-p">
-                    軟體工程師是許多人夢寐以求的轉職熱門選項，任何調查排行榜幾乎都高居前三名，許多人認為只要轉職軟體工程師，就能坐在電腦前吹冷氣寫程式，不用風吹雨打日曬雨淋，就能獲得一份技術性高、取代性低，能夠做到退休的高薪高福利工作…<br><br>
-                    如果您下定決心想要轉職軟體工程師，還想在這個行業中出類拔萃，獲得現在難以想像的高薪以及不被淘汰，那可不能只會「寫程式」喔！
+                    面對現在唾手可得的資訊，那些閱完即忘的讀者，『長大不讀書，將來當記者』這註解一竿子打翻了那些在崗位上辛苦努力的媒體人，讓「記者」一職好似不再是份職業，而是一份「志業」。<br><br>
+                    畢業於政戰新聞系，從小報開始勤跑於政治線，中間轉跑財經，到最後成為知名有線電視台TVBS的主播，現任於1111人力銀行媒體中心總經理 – 知名資深記者何啟聖，在專訪中分享了當初自身的經歷與面對現代媒體界變相的感觸。
                 </p>
-                
-
-                <h2 id="section1" class="text-center">寫程式只是基礎，軟體工程師日常在做什麼？</h2>
+                <h2 id="section2" class="text-center">資訊爆炸的時代，如何做「好記者」?</h2>
                 <p class="mb-for-first-p">
-                    軟體工程師的工作內容，根據<a href="https://www.jobsalary.com.tw/jobdescription.aspx?codeNo=140202" class="link"
-                        target="_blank">薪資公秤</a>，所述，基本上為從事電腦軟體或系統的程式設計修改、安裝測試及管理維護，進一步還必須對使用者或客戶進行專案支援，如教育訓練或技術文件撰寫等作業。<br><br>
-                        如果從實務經驗來看，薪資公秤敘述的工作內容，是指對工作已經很熟練，能夠獨立作業的資深工程師，但若是剛剛轉職不久的軟體工程師，其工作型態會分為三大類：1.專案需求釐清 2.執行與完成專案 3. 自我持續成長，其細節分述如下：  
+                    面對廣大的網路世代，記者被迫要不斷求快、求新，內容也要越來越辛辣，這時就有人轉向做更長篇的內容，想以深刻的故事吸引讀者的興趣賺取點閱率。但不管是新奇、辛辣還是深刻性的新聞，只要不是被讀者需要的內容，就是不會有人看。<br><br>
+                    想要當好一位記者，首要就是<em>報導被人們大量傳播及討論</em>，但要當一位「好記者」你要傳播的信息更要讓讀者淺顯易懂。<br><br>
+                    現代網路讓新聞散播速度加速，各家媒體競爭劇烈，市場越發蓬勃的情況下，傳達的資訊越破碎，就越容易被讀者接受、傳播及討論。現在如果不站在讀者角度思考，又不用心提升內容品質，註定當不成一位好記者。
                 </p>
-                <ol class="decimal-style">
-                    <li>
-                        <p><span class="deco-color">專案需求釐清：</span><br>
-                            <span class="mb-p">
-                                軟體工程師需要跟專案需求單位或相關窗口，進行跨部門的溝通，了解其需求，然後與主管以及團隊成員討論技術上的可行性，並定義各項作業的優先順序，再回報給需求單位，獲得同意後，才能進入執行階段。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">執行與完成專案：</span><br>
-                            <span class="mb-p">
-                                在動手寫程式之前，需要先跟團隊成員討論技術上較優的實作方式，以增進效能及減少未來除錯（debug）階段的麻煩。
-                            </span>
-                            <span class="mb-p">
-                                前置作業完成，進入專案程式撰寫階段，但在此過程中，也會遇到不少技術困難，這時可透過查閱相關技術文件、與團隊討論，上網到相關論壇研究等方式解決。
-                            </span>
-                            <span class="mb-p">
-                                程式撰寫完畢後，還需要進行測試以及除錯，對於剛轉職的軟體工程師，執行除錯這項任務如同家常便飯，且可能非常耗時，更雪上加霜的情況如：因為除錯耽誤到時間，影響整個專案進度，導致撰寫程式的時間越來越緊，錯誤越來越多…惡性循環，最後可能要勞動主管或資深工程師救援，才能順利脫困。
-                            </span>
-                            <span class="mb-p">
-                                當程式終於順利完成，還必須撰寫相關的技術文件與教育訓練文件，才能交給使用單位複測，而如果使用單位在此階段測試上有什麼不順，甚至發現新bug，軟體工程師也必須儘速處理。
-                            </span>
-                            <span class="mb-p">
-                                在許多中小型公司，就算專案完成交付給使用單位，但使用單位在運作上或是操作上有什麼問題，甚至看不懂技術文件，軟體工程師也必須協助教育訓練，直到使用者能穩定運作為止。
-                            </span>
-           
-                            
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">自我持續成長：</span><br>
-                            <span class="mb-p">
-                                程式撰寫沒有一定的公式，「會」與「精通」的差異，對於程式碼大小與執行效能可能相差甚大，加上軟硬體技術不斷發展，必須持續精進自己熟悉的程式語言，並且學習相關領域（如前端工程師去了解後端與資料庫）的知識。
-                            </span>
-                        </p>
-                    </li>
-                </ol>
-
                 <figure class="text-center">
-                    <img class="img-fluid d-block img_center" src="/position/img/software-engineer-coding.jpg"
-                        alt="軟體工程師coding">
+                    <img class="img-fluid" src="../img/reporter3.jpg" alt="該如何做一個好記者 示意圖">    
                 </figure>
             </div>
         </section>
         <section class="gray-bg">
             <div class="container">
-                <h2 id="section2" class="text-center">軟體工程師的分類多，專長方向大不同</h2>
-                
+                <h2 id="section3" class="text-center">不要失去好奇心更不要停止充實自己</h2>
                 <p class="mb-for-first-p">
-                    除了工作內容龐雜，軟體工程師的分類也開枝散葉，光是最熱門的Web相關類，就可分為前端工程師、後端工程師與網站可靠性工程師（Site Reliability Engineer，SRE）三類，簡述如下：
+                    『長大不讀書，將來當記者』一併把那些在崗位上辛苦努力的媒體人拖下水。對於現代人人都能暢所欲言的情況，何啟聖說：『想成為一名「記者」吃苦耐勞、擁有強烈好奇心都是最基本的，但要能預料事件後續、高度敏銳的「新聞鼻」絕對不能少，這都是不停閱讀及經驗累積的成果，後天培養出來的特質。』<br><br>
+                    不管是否讀新聞系本科出生，依舊有滿腔熱情想挑戰自我，想對自己身處社會，貢獻一份責任感的人想跳入這個圈子；何啟聖幫想要踏入媒體業或想轉行當記者的人，整理出了下列快速累積經驗的3要點：
                 </p>
-                
-                <ol >
+                <ul>
                     <li>
-                        <p><span class="deco-color">Web前端工程師：</span><br>
-                            <span class="mb-p">
-                                <em> 網站或APP向使用者呈現的介面，是前端工程師主要的任務範圍</em>
-                                ，必須會的程式語言有HTML、CSS（熟悉CSS框架如Bootstrap）、JavaScript（能善用JavaScript框架如React.js或Vue.js），以及熟練JQuery函式庫，能串接來自後端的API，並且維護資訊安全。 
-                            </span>
-                            <span class="mb-p">
-                                除了程式語言的技術能力，前端工程師還要有一定的美感與使用者同理心，以及知道搜尋引擎優化（SEO）的基本概念，能夠靈活運用響應式網頁設計（RWD），做出跨裝置、跨平台都能完善呈現的網頁。 
-                            </span> 
+                        <p><span class="deco-color">最基本的就是大量閱讀。</span><br>
+                            書寫及組織能力必須具備良好基礎，那如何精進自己的寫作能力，無非是閱讀『你必須要一直吸收，要用時才能擠出墨水，沒有不讀書就能書寫的人。』何啟聖非常認真的表示。
                         </p>
                     </li>
                     <li>
-                        <p><span class="deco-color">Web後端工程師：</span><br>
-                            <span class="mb-p">
-                                <em>網站上的各種功能與資料處理，如何經由合適的程式語言撰寫成演算法，讓網站伺服器迅速運算與回應使用者需求，是後端工程師主要的任務範圍。</em> 
-                            </span>  
-                            <span class="mb-p">
-                                後端工程師必須至少精通一種後端常用程式語言，例如PHP、Ruby、Python、Java、ASP.NET等，並且能靈活運用後端開發框架，例如Node.js、Rails、Django等。也會撰寫Web API、以及了解HTTP、TCP等網路通訊協定以及前端程式語言的基礎。
-                            </span> 
-                            <span class="mb-p">
-                                資深的後端工程師通常也會涉獵部署網站、資料庫平台的軟體，例如AWS、Azure、Google Cloud Platform，使用資料庫開發工具如MySQL、SQL Server等，並持續精進系統、資料庫設計與系統效能優化的能力。
-                            </span> 
+                        <p><span class="deco-color">對選定的領域或議題有基本認知與見解</span><br>
+                            記者基本上都有自己所屬的採訪路線，如政治、娛樂、生活等等之類；<em>你必須對自己負責的領域有充分的知識</em>，至於知識的來源，依舊是需要大量的閱讀，並對相關時事有更多的關注，這是身為記者不可或缺的本份。也因為你的報導可能會影響數以千計的人，所以除了資訊要正確外，也務必要保持中立的態度。
                         </p>
                     </li>
                     <li>
-                        <p><span class="deco-color">網站可靠性工程師：</span><br>
-                            <span class="mb-p">
-                                通常稱為SRE（Site Reliability Engineer）或DevOps，<em>工作任務為確保系統的伺服器與資料庫的運作，維護相關服務的穩定和性能</em>。這項工作過去需要投入大量人力操作，但現代則是透過撰寫軟體來取代之前需人工才能完成的任務，所以也變成軟體工程師能發揮的領域。
-                            </span>
-                            <span class="mb-p">
-                                SRE的工作內容為：設計網站可靠性流程與策略與開發自動化流程與程式、建構系統架構、管理部署流程。對系統進行容量規劃，管理相關設定，效能調校，分析系統效能瓶頸並改善，以及針對異常事件警示與回報、處理。
-                            </span>
-                            <span class="mb-p">
-                                SRE工程師需要至少懂得 C、Node.js、Python、Java、Ruby等其中一個程式語言，並有編寫腳本語言的能力，深入了解Linux系統與相關指令，熟悉各種自動化工具，例如Docker、Chef、Puppet、Shell Scripts等。
-                            </span>
-                            <span class="mb-p">
-                                由於雲端服務已經是主流，所以SRE工程師也需要熟悉各大廠商的雲端服務工具，例如AWS、Azure、Google Cloud Platform等。以及相關的資安軟體，熟悉各種網路攻擊手法與防禦方式。 
-                            </span>
-                            <span class="mb-p">
-                                SRE工程師在程式撰寫的策略上，重視能以系統性方法解決複雜問題，並且能從大局思考，不能有本位主義，規劃與策略能夠兼顧營運維護端與軟體開發端的需求（因為營運希望穩定的系統就不要輕易變動，開發端希望常常有新功能更新，兩者背道而馳）。
-                            </span>
-                        </p>
-                    </li>
-                </ol>
-                <p class="mb-for-first-p">
-                    其他還有Mobile平台相關如IOS或Android軟體工程師，PC、遊戲機等平台相關的軟體工程師，細節因為篇幅有限就不詳盡說明了。
-                </p>
-
-
-
-            </div>
-        </section>
-        <section>
-            <div class="container">
-                <h2 id="section3" class="text-center">出社會之後應該如何轉職成軟體工程師</h2>
-                <p class="mb-for-first-p">
-                    軟體工程師在職涯的優勢有：
-                </p>
-                <ul class="decimal-style">
-                    <li>
-                        <p>
-                            <span class="mb-p">工作機會多，基本上是事求人。</span>      
-                        </p>
-                    </li>
-                    <li>
-                        <p>
-                            <span class="mb-p"> 專業技能不受產業限制。</span>
-                           
-                        </p>
-                    </li>
-                    <li>
-                        <p>
-                            <span class="mb-p">累積的經驗對未來工作有幫助。</span>                            
-                        </p>
-                    </li>
-                    <li>
-                        <p>
-                            <span class="mb-p"> 工作環境通常相對單純。</span>
-                        </p>
-                    </li>
-                    <li>
-                        <p>
-                            <span class="mb-p">平均薪資的天花板、未來可預期的加薪幅度、甚至跳槽可談的價碼，通常都比一般上班族高。 </span>
+                        <p><span class="deco-color">良好的人際互動與溝通</span><br>
+                            這是個要不停接觸新人、事、物的職業。而大多數的報導都以「人」為出發，與每個工作中合作的對象有良好的互動自然也非常重要。這不僅是單純和受訪者建立良好的關係，<em>持續的培養每一個關係，對自己以後的新聞工作進行或是消息的挖掘也都會是很大的助力。</em>
                         </p>
                     </li>
                 </ul>
-                <p class="mb-for-first-p">
-                    因此坊間有許多軟體工程師訓練班，網路上也有很多訓練課程，只要轉職者是真的有心、有熱情、有毅力，在一年內學會特定的程式語言，成功轉職通常不是太難的事情，可參考下列各點：
-                </p>
-
-                <ol>
-                    <li>
-                        <p><span class="deco-color">選擇培訓機構：</span><br>
-                            <span class="mb-p">
-                                例如職訓局、資策會，民間補習班等，通常能夠有系統的讓學生習得目標程式語言。而且<em>類似學校的環境，有老師教，有機會能發問，能夠跟同學討論，甚至有競爭感，比較有動力繼續學習下去。</em> 
-                            </span>
-                            <span class="mb-p">
-                                這些補習班通常有與業界求才單位合作，或是老師有相當的業界人脈，如果在學習過程中表現優異且做出成果，將有機會獲得推薦進入相關產業工作。
-                            </span>
-                            <span class="mb-p">
-                                但是培訓機構為了符合「大部分學生程度」，教學進度往往無法客製化，很可能發生覺得老師教得太簡單，或是還沒完全懂，老師已經往下教的窘境。
-                            </span>
-                            <span class="mb-p">        
-                                此外，這類補習班的課程學費較為昂貴，通常一次約6～10多萬，並且還沒算上舟車勞頓的費用，也必須在固定的時間上課，時間上較沒有彈性。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">線上課程平台：</span><br>
-                            <span class="mb-p">
-                                線上課程為講師在網路上授課，除了影片教學外，通常學員可以連絡上講師本人，詢問課程內相關的問題，學習時間比較自由，課程內容也可以無限次數重複觀看。
-                            </span>
-                            <span class="mb-p">
-                                 線上課程需要付費，但通常遠小於實體培訓機構，由於線上課程平台之間競爭激烈，有時會有優惠價或包套特餐，但如果想完整的學完一套軟體課程，通常還是得付出上萬元的學費。
-                            </span>
-                            <span class="mb-p">
-                                如果英文或其他外文程度不錯，也可以找國外平台的教學課程，畢竟程式語言其實沒有國界之分，因此良好的外語水平是學習上的一大優勢。
-                            </span>
-                            <span class="mb-p">
-                                線上課程本身雖然有安排教學進度，但主要還是看使用者如何安排時間，在沒有壓力的情況下，有些沒有自制力與毅力的同學，可能容易產生怠惰的情緒。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color"> 買書或以網路免費教學輔助自學：</span><br>
-                            <span class="mb-p">
-                                網路上有許多的軟體工程師的教學資源、如論壇、教學影片等，如果能夠利用這些資源，幾乎都可以自學，也確實有人靠自學就順利轉職成為軟體工程師。
-                            </span>
-                            <span class="mb-p">
-                                網路自學的最大優勢是有許多免費的資源，以及論壇上有很多熱心的網友幫忙回答問題，而且能夠培養出強大的自學能力，對未來職涯遇到問題，尋求解決方案時，也能事半功倍。
-                            </span>
-                            <span class="mb-p">
-                                <em>網路自學的缺點也是很明顯的，通常沒有進度規劃，也沒有強制力</em> ，如果不是對寫程式真心有愛，下定決心要跳出舒適圈的話是很難成功自學的，其中半途而廢者更是車載斗量。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color"> 大量的實作練習與培養專案能力：</span><br>
-                            <span class="mb-p">
-                                無論是選擇自學還是機構培訓，都要想辦法不斷的練習與實作，甚至想辦法找課外練習的機會，例如參加「黑客松」（Hackathon）競賽！<br><br>
-                            </span>
-                            <span class="mb-p">
-                                從這些練習甚至比賽的淬鍊中，不斷掌握撰寫程式的「熟悉度」、「細膩度」、「速度」等功力程度，也能以是否能完成比賽為標準，以及是否有與需求方、團隊成員的溝通能力，評估自己的程度，未來才能把寫程式從「學會」變成真正在職場有用的「技能」。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                    <li>
-                        <p><span class="deco-color">  參加相關程式語言的社群：</span><br>
-                            <span class="mb-p">
-                                轉職者雖可以透過各種學習方式，習得如何撰寫程式，但對於軟體工程師的思維模式，或是業內的行事風格，則未必能很快地融入，對求職或工作都可能有影響，因為「思考模式不轉變，對於主管及同事的觀感，轉職者還是像軟體工程師界的局外人」。
-                            </span>
-                            <span class="mb-p">
-                                加入相關軟體工程師社群，能在進入職場前就認知工程師的思維模式，「透過相處自然學習，融會貫通」轉變成轉職者自己的思維，對於轉職一定是加分。
-                            </span>
-                            <span class="mb-p">
-                                故建議從開始學習程式撰寫時，就積極參加一些同樣程式語言的開發者社群，甚至相關的實體聚會，除了能觀察軟體工程師的思維模式，還能找到前輩討論、指點迷津、吸收經驗，甚至成為在業界的人脈，增加因推薦而獲得的工作機會，這對於非科班出身的轉職者，相當重要！
-                            </span>
-                        </p>
-                    </li>
-                </ol>
-
-
-                <figure class="text-center">
-                    <img class="img-fluid d-block img_center" src="/position/img/software-engineer-interview.jpg"
-                        alt="軟體工程師面試">
-                </figure>
-
-            </div>
-        </section>
-        <section class="gray-bg">
-            <div class="container">
-                <h2 id="section4" class="text-center">轉職者怎麼樣規劃面試</h2>
-                <p class="mb-for-first-p">
-                    轉職的軟體工程師，必須跟一批科班出身的軟體工程師同場較勁，而在相關的工作經驗不足，並缺乏亮眼的學經歷下，恐怕難以獲得心儀的企業青睞，故需要更周全的求職規劃與面試策略！以下幾點提供轉職者參考：
-                </p>
-                <ol class="decimal-style">
-                    <li>
-                        <p><span class="deco-color"> 求職規劃：</span><br>
-                            <span class="mb-p">
-                                許多過來人都建議軟體工程師的轉職者，只要有機會找到實戰的經驗，無論是與其他人合作專案，或是不怎麼心儀的工作機會，都建議儘早開始進入第一份工作。
-                            </span>
-                            <span class="mb-p">
-                                <em>只有真的開始了解使用者需求、找解法、規劃與撰寫程式碼、除錯…等流程，才能讓軟體工程師職涯真的動起來，並且快速成長</em>。更重要的是思維模式會更貼近工程師：從「如何寫出程式」到「如何完成專案」再到「如何減少額外流程並以容易維運的架構完成專案」。
-                            </span>
-                            <span class="mb-p">
-                                當有了工作經歷與第一個作品，轉職者就不再是那個非本科系的菜鳥，這時不但能夠拿著作品證明自己「能對公司有貢獻」，且熟悉了行業術語與運作型態，能夠以說著較專業的「行話、關鍵字」以及自信的態度，從「會寫什麼程式」進階到「遇到什麼問題，思考該怎麼拆解，最後以何種解決方案處理」。
-                            </span>
-                            <span class="mb-p">
-                                當第一份工作駕輕就熟，無論談加薪或換工作，都不再是吳下阿蒙，就可以開始準備談加薪或找第二份工作，能夠爭取更優秀或較心儀的工作機會。
-                            </span>
-                            <span class="mb-p">
-                                在<em> 進入找更合適或高薪的工作階段，更應該思考，要進哪一個「產業」，畢竟雖然寫程式的技能帶得走，但是產業本身的專業知識則是「隔行如隔山」，風氣可能也完全不同</em>，因此在工作之餘能多參加軟體工程師的社群，看看同樣程式語言在不同產業的發展，對未來選擇時會有不少幫助。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">履歷撰寫技巧：</span><br>
-                            <span class="mb-p">
-                                除了履歷都有的學經歷描述，建議履歷中要有一段簡潔、易讀的專業敘述欄位，讓面試官清楚與快速的了解轉職者所擅長的專業領域，<em> 除了表列熟悉的程式語言，更應加上簡明扼要的描述。</em>
-                            </span>
-                            <span class="mb-p">
-                                例如：比起只寫會用HTML5撰寫網頁，並會以CSS3調整，不如寫利用熟悉HTML5、CSS3，並以Sass+ PostCSS撰寫出RWD Web，並附上舉證連結，更能證明技術能力，也讓面試官更容易評估而加深印象。
-                            </span>
-                            <span class="mb-p">
-                                軟體工程師是否有專案溝通能力，面試官會在面試時判斷，因此也是履歷中應該表現出來的重點，先給面試官建立印象。因此<em>履歷中可以附上三個以上的專案介紹作品集，重點著重在說明自己擔任的角色，怎麼和團隊成員與需求者溝通，如何解決問題等細節，來替自己的個性與溝通能力背書！</em>
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color"> 面試策略：</span><br>
-                        <span class="mb-p">
-                            轉職者履歷上的學經歷描述，相較於科班出身的軟體工程師，先天上就比較吃虧， <em> <strong>因此面試的最佳策略，就是「客製化」</strong></em>，針對每一間投遞履歷的公司，都先打聽、研究其需求，以及職務的工作說明（Job Description），例如向對方HR打聽、與獵人頭討論，或是上網搜尋等，都能發現公司業務及該職位的工作內容需求。
-                        </span>
-                        <span class="mb-p">
-                            如應徵電子商務APP的軟體工程師，需要先去了解公司產品的特性，參考類似的APP結構，再思考需要那些開發流程、會用到什麼程式語法，如何確保關鍵細節如交易安全性等，面試時使用自製的簡報說明。
-                        </span>
-                        <span class="mb-p">
-                            看到這一段，許多人可能會「先入為主的成見」，認為在就職前，根本不太可能知道公司未來會派什麼任務，怎麼準備？實際上這正是「有心人」跟「隨緣派」的差異，認真打聽/收集資訊與盡力準備可能的解決方案，面試時的自信與內容差異，相信面試官絕對看的出來！俗話說：「機會只會給準備好的人」！
-                        </span>
-                        <span class="mb-p">
-                            此外，也可以在履歷中，列上Side Project，即用業餘時間開發的專案，通常是想要解決某個問題或是滿足自己興趣，但放在履歷中介紹，<em>可以讓面試官了解，除了把寫程式當工作，自己更願意積極的在下班持續學習，以及培養解決問題的能力。</em>
-                        </span>
-                        <span class="mb-p">
-                            除了介紹Side Project的重點特色外，更需說明為什麼要做這個專案、與多少人合作、花了多少時間、解決了那些最困難的問題，最後成果有多少人使用、產生甚麼樣的影響力，以及本身在過程中，獲得多少實質上的收穫等。
-                        </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">專業考試前的模擬與練習：</span><br>
-                            <span class="mb-p">
-                                軟體工程師的面試中，常常會有專業考試或是白板題，這些能靠平常蒐集相關的模擬試題，並且每天花時間練習，甚至與學習夥伴或同學模擬練習，熟悉隨時有人打斷思路，甚至質疑的情境，才不會在考試時因為緊張，而失去應有的水準。
-                            </span>
-                        </p>
-                    </li>
-                </ol>
-
-
-                <figure class="text-center">
-                    <div class="software-engineer_img-pc"> 
-                        <img class="img-fluid d-block img_center" src="/position/img/software-engineer-interview-to-do-list.jpg"
-                        alt="軟體工程師面試">
-                    </div>
-                    <div class="software-engineer_img-Mobile"> 
-                        <img class="img-fluid d-block img_center" src="/position/img/1111 icon0-05.jpg"
-                        alt="軟體工程師面試">
-                    </div>
-                </figure>
-
-
-                <!-- <div class="table-responsive simplebar">
-                    <table class="mx-auto" id="table2-1">
-                        <tr>
-                            <th class="w-25">階段</th>
-                           
-                            <th class="w-50">準備事項</th>
-                        </tr>
-                        <tr>
-                            <td>求職規劃</td>
-                           
-                            <td>
-                                <ol>
-                                    <li>了解產業 </li>
-                                    <li>了解公司</li>
-                                </ol>
-                            </td>
-                        </tr>
-                        <tr>
-                           
-                            <td>履歷撰寫</td>
-                            <td>
-                                <ol>
-                                    <li>專長領域</li>
-                                    <li>溝通能力證明</li>
-                                </ol>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>面試策略</td>
-                    
-                            <td>
-                                <ol>
-                                    <li>客製化履歷</li>
-                                    <li>簡介Side Project</li>
-                    
-                                </ol>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>考試策略</td>
-                            <td>
-                                <ol>
-                                    <li>蒐集模擬試題
-                                    </li>
-                                    <li>瞭解他人的態度與意圖</li>
-                                    <li>模擬演練</li>
-                                </ol>
-                            </td>
-                        </tr>
-                    </table>
-                </div> -->
-                <span class="d-block text-center highlighter">無經驗轉職軟體工程師看過來  好職缺不等人快把握機會！</span>
+                <span class="d-block text-center highlighter">記者最新職缺</span>
                 <!-- Slider main container -->
                 <div class="swiper-container">
                     <!-- Additional required wrapper -->
                     <div class="swiper-wrapper">
-                    <%=htmlslide %>
+                        <!-- Slides -->
+                        <div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56167213/" target="_blank"></a>            <h4 class="jobTitle card-title">記者</h4>            <p class="card-text cmpName"><span class="cmp">人間福報社股份有限公司</span> | <span class="cmpTrade">多媒體相關</span></p>            <p class="jobSalary card-text">月薪 24,000~40,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">大學、碩士、博士</span></p>            <p class="jobContent card-text">1. 2年以上新聞採訪經驗
+2. 文字能力強、具工作熱忱
+3. 可獨立作業，具團隊合作精神
+4. 品行良好，工作自律負責
+5. 具專題規劃能力尤佳</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-06",        "name": "記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市汐止區",            "address": {                "@type": "PostalAddress",                "postalCode": "221"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/50768597/?agent=home_position_schema_sales",            "name": "人間福報社股份有限公司"        },        "description": "1. 2年以上新聞採訪經驗2. 文字能力強、具工作熱忱3. 可獨立作業，具團隊合作精神4. 品行良好，工作自律負責5. 具專題規劃能力尤佳",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56167213/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-06",            "url": "https://www.1111.com.tw/job/56167213/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91496630/" target="_blank"></a>            <h4 class="jobTitle card-title">文字記者</h4>            <p class="card-text cmpName"><span class="cmp">中華電視股份有限公司</span> | <span class="cmpTrade">廣電視節目供應</span></p>            <p class="jobSalary card-text">月薪 30,000元 以上</p>            <p class="card-text story"><span class="exp">1年工作經驗以上</span> | <span class="gr">大學</span></p>            <p class="jobContent card-text">1、新聞採訪撰寫
+2、新聞發想追蹤規劃
+3、發掘獨家新聞
+4、製作新聞專題
+5、其他主管交辦事項</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "文字記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市大安區",            "address": {                "@type": "PostalAddress",                "postalCode": "106"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/1220037/?agent=home_position_schema_sales",            "name": "中華電視股份有限公司"        },        "description": "1、新聞採訪撰寫2、新聞發想追蹤規劃3、發掘獨家新聞4、製作新聞專題5、其他主管交辦事項",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91496630/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/91496630/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91682954/" target="_blank"></a>            <h4 class="jobTitle card-title">新聞記者</h4>            <p class="card-text cmpName"><span class="cmp">社團法人永久和平發展協會</span> | <span class="cmpTrade">社會福利機構</span></p>            <p class="jobSalary card-text">面議（經常性薪資4萬/月含以上）</p>            <p class="card-text story"><span class="exp">3年工作經驗以上</span> | <span class="gr">大學、碩士</span></p>            <p class="jobContent card-text">1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞
+2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表
+3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物
+4.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成另一種文字
+5.依據不同的題材，進行不同重點的翻譯
+6.進行直接的口述翻譯、文件公文翻譯及口譯
+7.從事譯文之校訂及修改、彙整專案資料
+8.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成其他語言
+9.依據不同的題材，進行不同重點的翻譯
+10.進行直接的口述翻譯</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "新聞記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市松山區",            "address": {                "@type": "PostalAddress",                "postalCode": "105"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/9781483/?agent=home_position_schema_sales",            "name": "社團法人永久和平發展協會"        },        "description": "1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物4.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成另一種文字5.依據不同的題材，進行不同重點的翻譯6.進行直接的口述翻譯、文件公文翻譯及口譯7.從事譯文之校訂及修改、彙整專案資料8.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成其他語言9.依據不同的題材，進行不同重點的翻譯10.進行直接的口述翻譯",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91682954/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/91682954/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91471484/" target="_blank"></a>            <h4 class="jobTitle card-title">文字記者</h4>            <p class="card-text cmpName"><span class="cmp">財團法人慈濟傳播人文志業基金會</span> | <span class="cmpTrade">廣電視節目供應</span></p>            <p class="jobSalary card-text">月薪 25,000~39,000元</p>            <p class="card-text story"><span class="exp">1年工作經驗以上</span> | <span class="gr">專科、大學</span></p>            <p class="jobContent card-text">採訪、寫稿、過音、須配合出差
+1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞
+2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導
+3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-08",        "name": "文字記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市北投區",            "address": {                "@type": "PostalAddress",                "postalCode": "112"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/35865902/?agent=home_position_schema_sales",            "name": "財團法人慈濟傳播人文志業基金會"        },        "description": "採訪、寫稿、過音、須配合出差1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91471484/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-08",            "url": "https://www.1111.com.tw/job/91471484/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91471487/" target="_blank"></a>            <h4 class="jobTitle card-title">攝影記者</h4>            <p class="card-text cmpName"><span class="cmp">財團法人慈濟傳播人文志業基金會</span> | <span class="cmpTrade">廣電視節目供應</span></p>            <p class="jobSalary card-text">面議（經常性薪資4萬/月含以上）</p>            <p class="card-text story"><span class="exp">2年工作經驗以上</span> | <span class="gr">專科、大學</span></p>            <p class="jobContent card-text">1.拍攝新聞畫面及剪輯
+2.電視新聞專題採訪及製作
+3.須配合調班及出差</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-08",        "name": "攝影記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市北投區",            "address": {                "@type": "PostalAddress",                "postalCode": "112"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/35865902/?agent=home_position_schema_sales",            "name": "財團法人慈濟傳播人文志業基金會"        },        "description": "1.拍攝新聞畫面及剪輯2.電視新聞專題採訪及製作3.須配合調班及出差",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91471487/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-08",            "url": "https://www.1111.com.tw/job/91471487/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/85956062/" target="_blank"></a>            <h4 class="jobTitle card-title">N081記者(北部)</h4>            <p class="card-text cmpName"><span class="cmp">年代網際事業股份有限公司</span> | <span class="cmpTrade">電視</span></p>            <p class="jobSalary card-text">月薪 25,000~35,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "N081記者(北部)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市內湖區",            "address": {                "@type": "PostalAddress",                "postalCode": "114"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/1225106/?agent=home_position_schema_sales",            "name": "年代網際事業股份有限公司"        },        "description": "前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/85956062/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/85956062/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/92119821/" target="_blank"></a>            <h4 class="jobTitle card-title">電訪記者</h4>            <p class="card-text cmpName"><span class="cmp">競業股份有限公司</span> | <span class="cmpTrade">休閒服務</span></p>            <p class="jobSalary card-text">月薪 24,000~50,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">1. 透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞
+2. 蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表
+3. 前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物
+4. 活動案企劃主題、議題、事件分析者
+5. 創意發想、規劃活動採訪策劃及編輯工作
+6. 新聞資源蒐集、發掘
+7. 新聞、節目企劃
+8. 人物、企業、事件的採訪
+9. 新聞的播報
+10. 新聞稿、字幕等文字的撰寫
+11. 相關新聞及產業經營
+12. 參與前期製作、討論、發想、建議
+13. 決定訪問對象
+14. 預算的使用以及規劃</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "電訪記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台南市南區",            "address": {                "@type": "PostalAddress",                "postalCode": "702"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/71967733/?agent=home_position_schema_sales",            "name": "競業股份有限公司"        },        "description": "1. 透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞2. 蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表3. 前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物4. 活動案企劃主題、議題、事件分析者5. 創意發想、規劃活動採訪策劃及編輯工作6. 新聞資源蒐集、發掘7. 新聞、節目企劃8. 人物、企業、事件的採訪9. 新聞的播報10. 新聞稿、字幕等文字的撰寫11. 相關新聞及產業經營12. 參與前期製作、討論、發想、建議13. 決定訪問對象14. 預算的使用以及規劃",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/92119821/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/92119821/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91213436/" target="_blank"></a>            <h4 class="jobTitle card-title">文字記者(高雄)</h4>            <p class="card-text cmpName"><span class="cmp">中嘉數位股份有限公司</span> | <span class="cmpTrade">網路相關</span></p>            <p class="jobSalary card-text">月薪 26,000~40,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">大學、碩士、博士</span></p>            <p class="jobContent card-text">1.電視新聞採訪、撰稿、配音
+2.節目、外景主持</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-09",        "name": "文字記者(高雄)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "高雄市左營區",            "address": {                "@type": "PostalAddress",                "postalCode": "813"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/401630/?agent=home_position_schema_sales",            "name": "中嘉數位股份有限公司"        },        "description": "1.電視新聞採訪、撰稿、配音2.節目、外景主持",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91213436/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-09",            "url": "https://www.1111.com.tw/job/91213436/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide"><a class="moreLink" href="/search/job?ks=記者">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>
@@ -770,59 +284,78 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                 </div>
                 <!-- / 輪播 不自動 最後一個導 _blank 主網連結 -->
             </div>
-
         </section>
         <section class="gray-bg">
             <div class="container">
-                <h2 id="section6" class="text-center">軟體工程師薪資大解密！低薪高薪差異在哪?</h2>
+                <h2 id="section4" class="text-center">台灣媒體的畸形</h2>  
                 <p class="mb-for-first-p">
-                    根據勞動部公布的「<a href="https://statdb.mol.gov.tw/html/svy08/0835menu.htm"
-                    target="_blank">108年職類別薪資調查報告</a>」，軟體開發及程式設計師，以及資訊系統分析及設計師兩類，平均薪資都在新台幣八萬元以上，較大部分上班族高出一大截。<br><br>
-                    但是軟體工程師的平均薪資，並不能反映業界的真實狀態，即薪資落差很大，初入行者年薪中位數約66萬，較有經驗的開發者年薪中位數為84萬，能夠獨當一面的資深工程師，薪資中位數立刻跳躍至164萬。<br><br>
-                    軟體工程師的薪資，並不是穩定的「打怪升等」，按部就班論資排輩就能一步步爬升上去，而是一個「殘酷舞台」，厲害的軟體工程師，入行幾年就能達到資深工程師的收入，平庸者則可能一直當「低薪碼農」，甚至學習能力跟不上程式語言的演進，最終被淘汰出局！
-                    
+                    現在大眾對於記者的印象除了愚蠢沒有同理心，甚至不把記者的專業看在眼裡。造成這狀況的主因大多是公司要求記者，寫下聳動吸睛的標題和畫面去吸引大量點閱率，但在沒有認真對主題做功課，生活基本知識有不足，還偷懶跳過驗證資料正確性的情況下，就變成了扭曲事實，斷章取義的新聞或報導。<br><br>
+                    對這樣的現況何啟聖感慨的表示，因為現在的台灣的媒體太多，但相對值得被報導的內容太少了，造成了大家的相似度太接近，甚至是照抄同一個來源，這使得台灣媒體發展成一個非常畸形、也令人憂心的狀況。
                 </p>
-                <p class="mb-for-first-p">高薪的軟體工程師除了專業能力，還擁有幾項祕訣：</p>
-                <ol>
-                    <li>
-                        <p><span class="deco-color"> 學歷高低，經歷相關性：</span><br>
-                            <span class="mb-p">
-                                在前幾份工作，學歷比較有影響，但對於轉職者可能就相對比較吃虧，但如果能夠證明自己是前述的跨領域人才，過去的學經歷對於現在的專案有幫助，也能獲得提高薪資的機會。
-                            </span>
+                <figure class="text-center">
+                    <img class="img-fluid" src="/position/img/reporter2.jpg" alt="台灣媒體記者的畸形 示意圖">    
+                </figure>
+                <h2 id="section5" class="text-center">人人都能是記者</h2>
+                <p class="mb-for-first-p">
+                    在這人人都能成為記者抑或報導者的時代，『想踏入這一圈，想要為社會出一份力前，你需要清楚自己的定位，設定想發展的主要議題，然後認真投入的經營。』何啟聖說道。<br><br>
+                    「記者」其實是充滿理性與感性職業，如何妥善結合不同的議題及社會事件，這必須仰賴平時累積的知識及經驗，再用理性包覆最核心的內容，又不缺乏同理心、溫暖及關懷，當能好好結合所有元素時，你所呈現出來的，絕對會是一篇好的報導。
+                </p>
+                <div class="row align-items-center">
+                    <div class="col-sm-12 col-md-8  order-2 order-md-1">
+                        <h3 class="txt-green">何啟聖 – 資深的前軍事記者</h3>
+                        <p>
+                            曾任TVBS-NEWS《整點新聞》主播、TVBS政論節目《13招待所》主持人。現任1111人力銀行行銷開發部總經理兼發言人。
                         </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">英文能力：</span><br>
-                            <span class="mb-p">
-                                英文能力強有幾個因素可以變成談薪籌碼，例如在程式撰寫方面，證明可以由英文的技術公報或論壇，獲得更新的資訊與技術，或是問題的解法，加速專案的進行，自然比較占優勢。
-                            </span>
-                            <span class="mb-p">
-                                如果待在外商公司，英文能力強則是便利與需求者、使用者溝通，也能夠以英文撰寫技術文件，不需額外的翻譯，通常語言能力也會反應在薪資上。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color"> 進入賺錢的產業或公司：</span><br>
-                            <span class="mb-p">
-                                轉職軟體工程師，第一份工作以取得經驗為主，在第二份工作開始，就要好好考慮要進入哪一個產業與公司，產業以及公司賺錢與否，對於給員工的薪資差異相當大，而前述建議應多參與程式語言的社群，蒐集業界情報，都能做到知己知彼，及早準備如何進入較有「錢景」的產業或公司。
-                            </span>
-                        </p>
-                    </li>
-                    <li>
-                        <p><span class="deco-color">轉換成管理職：</span><br>
-                            <span class="mb-p">
-                                轉職者如果先前已經有管理經驗，又熟悉軟體工程師的技能與生態後，有機會轉換身分為管理者或專案領導者，薪資自然也會提升。
-                            </span>
-                        </p>
-                    </li>
-                </ol>
-
-                <span class="d-block text-center highlighter">年薪百萬以上軟體工程師職缺 有本事的你快來幫自己加薪！ </span>
+                    </div>
+                    <div class="col-sm-12 col-md-4 order-1 order-md-2">
+                        <figure>
+                            <img class="img-fluid" src="../img/reporter4.png" alt="資深記者 - 何啟聖">
+                        </figure>
+                    </div>
+                </div>
+                <span class="d-block text-center highlighter">記者最新職缺</span>
                 <!-- Slider main container -->
                 <div class="swiper-container">
                     <!-- Additional required wrapper -->
                     <div class="swiper-wrapper">
-                    <%=htmlslide2 %>
+                        <!-- Slides -->
+                        <div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56167213/" target="_blank"></a>            <h4 class="jobTitle card-title">記者</h4>            <p class="card-text cmpName"><span class="cmp">人間福報社股份有限公司</span> | <span class="cmpTrade">多媒體相關</span></p>            <p class="jobSalary card-text">月薪 24,000~40,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">大學、碩士、博士</span></p>            <p class="jobContent card-text">1. 2年以上新聞採訪經驗
+2. 文字能力強、具工作熱忱
+3. 可獨立作業，具團隊合作精神
+4. 品行良好，工作自律負責
+5. 具專題規劃能力尤佳</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-06",        "name": "記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市汐止區",            "address": {                "@type": "PostalAddress",                "postalCode": "221"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/50768597/?agent=home_position_schema_sales",            "name": "人間福報社股份有限公司"        },        "description": "1. 2年以上新聞採訪經驗2. 文字能力強、具工作熱忱3. 可獨立作業，具團隊合作精神4. 品行良好，工作自律負責5. 具專題規劃能力尤佳",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56167213/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-06",            "url": "https://www.1111.com.tw/job/56167213/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91496630/" target="_blank"></a>            <h4 class="jobTitle card-title">文字記者</h4>            <p class="card-text cmpName"><span class="cmp">中華電視股份有限公司</span> | <span class="cmpTrade">廣電視節目供應</span></p>            <p class="jobSalary card-text">月薪 30,000元 以上</p>            <p class="card-text story"><span class="exp">1年工作經驗以上</span> | <span class="gr">大學</span></p>            <p class="jobContent card-text">1、新聞採訪撰寫
+2、新聞發想追蹤規劃
+3、發掘獨家新聞
+4、製作新聞專題
+5、其他主管交辦事項</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "文字記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市大安區",            "address": {                "@type": "PostalAddress",                "postalCode": "106"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/1220037/?agent=home_position_schema_sales",            "name": "中華電視股份有限公司"        },        "description": "1、新聞採訪撰寫2、新聞發想追蹤規劃3、發掘獨家新聞4、製作新聞專題5、其他主管交辦事項",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91496630/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/91496630/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91682954/" target="_blank"></a>            <h4 class="jobTitle card-title">新聞記者</h4>            <p class="card-text cmpName"><span class="cmp">社團法人永久和平發展協會</span> | <span class="cmpTrade">社會福利機構</span></p>            <p class="jobSalary card-text">面議（經常性薪資4萬/月含以上）</p>            <p class="card-text story"><span class="exp">3年工作經驗以上</span> | <span class="gr">大學、碩士</span></p>            <p class="jobContent card-text">1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞
+2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表
+3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物
+4.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成另一種文字
+5.依據不同的題材，進行不同重點的翻譯
+6.進行直接的口述翻譯、文件公文翻譯及口譯
+7.從事譯文之校訂及修改、彙整專案資料
+8.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成其他語言
+9.依據不同的題材，進行不同重點的翻譯
+10.進行直接的口述翻譯</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "新聞記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市松山區",            "address": {                "@type": "PostalAddress",                "postalCode": "105"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/9781483/?agent=home_position_schema_sales",            "name": "社團法人永久和平發展協會"        },        "description": "1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物4.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成另一種文字5.依據不同的題材，進行不同重點的翻譯6.進行直接的口述翻譯、文件公文翻譯及口譯7.從事譯文之校訂及修改、彙整專案資料8.在保留語法及詞意的原則下，準確且流暢地將一種語言或文字翻譯成其他語言9.依據不同的題材，進行不同重點的翻譯10.進行直接的口述翻譯",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91682954/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/91682954/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91471484/" target="_blank"></a>            <h4 class="jobTitle card-title">文字記者</h4>            <p class="card-text cmpName"><span class="cmp">財團法人慈濟傳播人文志業基金會</span> | <span class="cmpTrade">廣電視節目供應</span></p>            <p class="jobSalary card-text">月薪 25,000~39,000元</p>            <p class="card-text story"><span class="exp">1年工作經驗以上</span> | <span class="gr">專科、大學</span></p>            <p class="jobContent card-text">採訪、寫稿、過音、須配合出差
+1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞
+2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導
+3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-08",        "name": "文字記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市北投區",            "address": {                "@type": "PostalAddress",                "postalCode": "112"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/35865902/?agent=home_position_schema_sales",            "name": "財團法人慈濟傳播人文志業基金會"        },        "description": "採訪、寫稿、過音、須配合出差1.透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞2.蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導3.前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91471484/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-08",            "url": "https://www.1111.com.tw/job/91471484/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91471487/" target="_blank"></a>            <h4 class="jobTitle card-title">攝影記者</h4>            <p class="card-text cmpName"><span class="cmp">財團法人慈濟傳播人文志業基金會</span> | <span class="cmpTrade">廣電視節目供應</span></p>            <p class="jobSalary card-text">面議（經常性薪資4萬/月含以上）</p>            <p class="card-text story"><span class="exp">2年工作經驗以上</span> | <span class="gr">專科、大學</span></p>            <p class="jobContent card-text">1.拍攝新聞畫面及剪輯
+2.電視新聞專題採訪及製作
+3.須配合調班及出差</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-08",        "name": "攝影記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市北投區",            "address": {                "@type": "PostalAddress",                "postalCode": "112"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/35865902/?agent=home_position_schema_sales",            "name": "財團法人慈濟傳播人文志業基金會"        },        "description": "1.拍攝新聞畫面及剪輯2.電視新聞專題採訪及製作3.須配合調班及出差",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91471487/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-08",            "url": "https://www.1111.com.tw/job/91471487/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/85956062/" target="_blank"></a>            <h4 class="jobTitle card-title">N081記者(北部)</h4>            <p class="card-text cmpName"><span class="cmp">年代網際事業股份有限公司</span> | <span class="cmpTrade">電視</span></p>            <p class="jobSalary card-text">月薪 25,000~35,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "N081記者(北部)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市內湖區",            "address": {                "@type": "PostalAddress",                "postalCode": "114"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/1225106/?agent=home_position_schema_sales",            "name": "年代網際事業股份有限公司"        },        "description": "前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/85956062/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/85956062/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/92119821/" target="_blank"></a>            <h4 class="jobTitle card-title">電訪記者</h4>            <p class="card-text cmpName"><span class="cmp">競業股份有限公司</span> | <span class="cmpTrade">休閒服務</span></p>            <p class="jobSalary card-text">月薪 24,000~50,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">1. 透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞
+2. 蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表
+3. 前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物
+4. 活動案企劃主題、議題、事件分析者
+5. 創意發想、規劃活動採訪策劃及編輯工作
+6. 新聞資源蒐集、發掘
+7. 新聞、節目企劃
+8. 人物、企業、事件的採訪
+9. 新聞的播報
+10. 新聞稿、字幕等文字的撰寫
+11. 相關新聞及產業經營
+12. 參與前期製作、討論、發想、建議
+13. 決定訪問對象
+14. 預算的使用以及規劃</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "電訪記者",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台南市南區",            "address": {                "@type": "PostalAddress",                "postalCode": "702"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/71967733/?agent=home_position_schema_sales",            "name": "競業股份有限公司"        },        "description": "1. 透過訪問、調查、觀察及參與公眾活動等方法，蒐集歷史資料、地方或國際新聞，發掘具有新聞價值及能引發讀者興趣之新聞2. 蒐集、報導及評論報章、雜誌、廣播、電視或網路傳播之新聞與時事，根據所得到之消息撰寫報導，並提交報社編輯部或新聞部處理後發表3. 前往新聞或意外事件現場以及重要公共集會場所進行採訪拍攝、訪問政治人物及其他公眾人物4. 活動案企劃主題、議題、事件分析者5. 創意發想、規劃活動採訪策劃及編輯工作6. 新聞資源蒐集、發掘7. 新聞、節目企劃8. 人物、企業、事件的採訪9. 新聞的播報10. 新聞稿、字幕等文字的撰寫11. 相關新聞及產業經營12. 參與前期製作、討論、發想、建議13. 決定訪問對象14. 預算的使用以及規劃",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/92119821/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/92119821/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91213436/" target="_blank"></a>            <h4 class="jobTitle card-title">文字記者(高雄)</h4>            <p class="card-text cmpName"><span class="cmp">中嘉數位股份有限公司</span> | <span class="cmpTrade">網路相關</span></p>            <p class="jobSalary card-text">月薪 26,000~40,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">大學、碩士、博士</span></p>            <p class="jobContent card-text">1.電視新聞採訪、撰稿、配音
+2.節目、外景主持</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-09",        "name": "文字記者(高雄)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "高雄市左營區",            "address": {                "@type": "PostalAddress",                "postalCode": "813"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/401630/?agent=home_position_schema_sales",            "name": "中嘉數位股份有限公司"        },        "description": "1.電視新聞採訪、撰稿、配音2.節目、外景主持",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91213436/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-09",            "url": "https://www.1111.com.tw/job/91213436/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide"><a class="moreLink" href="/search/job?ks=記者">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>
@@ -834,22 +367,9 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                     <!-- If we need scrollbar -->
                     <div class="swiper-scrollbar"></div>
                 </div>
-
-                <br><br><br><br><br><br><br><br>
-
-
-                <h2 id="section5" class="text-center"> 轉職軟體工程師，原本領域經驗優勢成高薪密技</h2>
-                <p class="mb-for-first-p">
-                    轉職者想要成為高薪的軟體工程師，其實有一項科班出身的軟體工程師未必有的優勢，即對於「原產業的相關知識」，尤其現在很多產業都在進行IT改革（如APP化的銀行）或是數位轉型（如出版業變成線上訂閱），抑或擁抱電子商務，希望能帶給原來產業新的機會。<br><br>
-                    所以<em>如果轉職者原本熟悉的產業，正在進行前述的轉型，擁有產業知識與程式語言技能的軟體工程師，就會非常吃香</em>。例如銀行近年講求數位化，如果求職的軟體工程師同時具有熟稔的金融與軟體技術背景，銀行應該是用八人大轎抬著來請這位「T型跨領域人才」工程師趕快去上班，並奉上可觀的高薪與福利！<br><br>
-                    如果轉職者在原產業發現了需求，但是整個產業風氣相對保守，沒有公司願意創新，也沒有可以期待發展的創新公司，若本身家庭與經濟能力許可，也可以考慮創業，雖然風險較高，但獲得成功後的發展不可限量！
-                </p>
+                <!-- / 輪播 不自動 最後一個導 _blank 主網連結 -->
             </div>
-
         </section>
-        <div class="text-center">
-            <a class="cta btn btn-danger" href="https://www.1111.com.tw/search/job?ks=%E8%BB%9F%E9%AB%94%E5%B7%A5%E7%A8%8B%E5%B8%AB" target="_blank">更多軟體工程師相關職缺</a>
-        </div>
     </div>
     <!-- / 請放footer -->
 
@@ -1077,7 +597,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
           </div>
       </footer>
       <!--footer end-->
-      <script src="./js/page.js"></script>
+      <script src="../js/page.js"></script>
 </body>
 
 </html>

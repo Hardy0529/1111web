@@ -245,6 +245,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
     }
 </script>
     <link rel="stylesheet" href="/position/css/page-style.css?v=20201223">
+    <link rel="stylesheet" href="/position/css/software-engineer.css?v=20201223">
 </head>
 
 <body>
@@ -322,9 +323,8 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 			</form>
 			<div id="search_click_Mask"></div>
 		</header>	
-		<!-- End header -->	
-
 		<!-- End header -->
+
         <header>
             <a href="#category" data-toggle="collapse" class="category d-none d-sm-none d-md-none d-lg-block "><i
                     class="fas fa-list-ul"></i> 目錄</a>
@@ -359,7 +359,6 @@ url = "https://www.1111.com.tw/position/software-engineer/"
             </ul>
 
         </header>
-        
         <!-- / 導航列? -->
         <section class="breadcrumbs givePadding">
             <div class="container">
@@ -368,7 +367,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                         <li class="breadcrumb-item"><a href="http://192.168.1.234/position/index-profession-dictionary.asp">首頁</a></li>
                         <li class="breadcrumb-item"><a href="http://192.168.1.234/position/catagory.asp">求職密技</a></li>
                         <li class="breadcrumb-item active" aria-current="page">軟體工程師</li>
-                        </ul>
+                    </ol>
                 </nav>
                 <!-- / 麵包屑 -->
             </div>

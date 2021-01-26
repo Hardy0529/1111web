@@ -1,194 +1,4 @@
-﻿<%Response.Buffer=True:Response.charset="utf-8":Session.CodePage=65001 'Power By Jason 2020/08/14%>
-<!--#include virtual="/includesU/trustIP.asp"-->
-<!--#includes virtual="/includesU/job-index-param.asp"-->
-<%
-tran=Request.QueryString("tran") '轉檔用
-posit=Request.QueryString("posit")
-If tran="" and posit<>"" Then
-    Server.Transfer "positHtml/"&posit&".asp"
-    Response.End()
-End If
-'高薪職缺
-KS="軟體工程師"
-IRules="salarytype=1&salary0=35000~*" '條件
-indexD=2:indexS="true":indexF="true" '找工作:同義:模糊
-searchC="position0" '關鍵字搜尋欄位
-indexC="employeeNo,organNo,oorgan,oshowfield,position0,experience,matchItem,grade,otrade,salary,matter,dateChange,workcity" '結果欄位
-ISort="ooSort asc,recruits desc,datein desc"
-PS=8:Page=1:htmlslide=""
-Call returnIntumit(indexD,indexC,1,IRules,ISort,KS,searchC,indexS,indexF,PS,Page):SCount=IntumitTotalCount '結果
-If SCount>0 Then 
-    arrI=arrIntumitIndex 
-    ICount=UBound(arrI,2)
-    For ii=0 To ICount
-        If arrI(0,ii)<>"" Then
-            IeNo=arrI(0,ii) '職編
-            IoNo=arrI(1,ii) '廠編
-            Iorgan=arrI(2,ii) '廠名
-            IshowField=arrI(3,ii):If IshowField="" Or Not IsNumeric(IshowField) Then IshowField=0 '客製顯示
-            If (clng(IshowField) And 8)=8 Then Iorgan="(派遣)"&Iorgan Else If (clng(IshowField) And 16)=16 Then Iorgan="(代招)"&Iorgan Else If (clng(IshowField) And 2048)=2048 Then Iorgan="(獵頭)"&Iorgan '特殊廠商
-            Iposition=arrI(4,ii) '職缺名
-            If Instr(Iposition,"amp")>0 And Instr(Iposition,";")>0 And Instr(Iposition,"&")>0 Then Iposition=Replace(Replace(Replace(Iposition,"<em>",""),"</em>",""),"amp;","") 'amp關鍵字處理
-            Iexper=chkArray(aExperienceO,arrI(5,ii),0):Iexperience=Iexper&"以上" '工作經驗   
-            Imatch=arrI(6,ii):If Iexper="" Then Iexperience="經驗不拘" Else If arrI(5,ii)="1" and (Imatch and 1)=0 Then Iexperience=Iexper&"可" Else If (Imatch and 1)=1 Then Iexperience="限定 "&Iexper Else If (Imatch and 2)=2 Then Iexperience=Iexper&"以下" Else Iexperience=Iexper&"以上" '經驗限制
-            Igrade=""
-            for g=0 to ubound(aoGrade) 
-                if (arrI(7,ii) and cint(split(aoGrade(g),"_")(0))) = cint(split(aoGrade(g),"_")(0)) then 
-                    Igrade=Igrade & chkArray(aoGrade,cint(split(aoGrade(g),"_")(0)),0) &"、"
-                end if
-            next
-            Igrade=RepRight(Igrade,"、"):If Igrade="" Then Igrade="學歷不拘"
-            ItradeNo=arrI(8,ii):Itrade=ArrayChange(1,2,ItradeNo,"tCodeTrade",11) '行業類別
-            Isalary=arrI(9,ii):Is0="":Is1="":Is2="" '薪資
-            if instr(Isalary,"‧")>0 then
-                arrIS=Split(Isalary,"‧")
-                If InStr(arrIS(0),"不支薪")>0 or (InStr(arrIS(0),"48")>0 and InStr(arrIS(0),"年含以上）")>0) Then 
-                    Isalary= arrIS(0)
-                ElseIf InStr(arrIS(0),"面議")>0 Then 
-                    Isalary= "面議（經常性薪資4萬/月含以上）"
-                Else
-                    If UBound(arrIS)=2 Then Is0=arrIS(0):Is1=Formatnumbers(arrIS(1),0):Is2=Formatnumbers(arrIS(2),0):Erase arrIS:Isalary=Is0&" "&Is1&"元":If (cLng(Imatch) and 65536)=65536 Then Isalary=Isalary&" 以上" Else If Is2<>"" And Is2<>"0" And Is1<>Is2 Then Isalary=Is0&" "&Is1&"~"&Is2&"元" '非面議
-                End If
-            Else
-                Isalary= "面議（經常性薪資4萬/月含以上）"
-            end if
-            Imatter=arrI(10,ii):Imatter=iif(Imatter="",Iposition,Imatter)
-            IdateChange=arrI(11,ii):IdateExpire=IdateChange:If IsDate(IdateChange) Then IdateChange=Year(IdateChange)&"-"&Right(Month(IdateChange)+100,2)&"-"&Right(Day(IdateChange)+100,2):IdateExpire=dateadd("yyyy",1,IdateChange) '更新日期
-            IcityCode=arrI(12,ii):If IcityCode="" Or Not IsNumeric(IcityCode) Then IcityCode=0 '工作地代碼
-            IworkCity="不拘":IworkCountry="":IworkZip="":If ArrayChange(1,2,IcityCode,"tCodeCity",11) <> "" Then IworkCountry=Replace(ArrayChange(1,2,IcityCode,"tCodeCity",13),"地區",""):If clng(IcityCode/10000)=10 Or clng(IcityCode/10000)=11 Then IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",14):IworkZip=iif(clng(IcityCode/10000)=10,chkArray(aZip,IcityCode,0),"") Else IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",11) '工作地名稱
-            SchemaWorkCity=IworkCity
-            ILinkOSchema="https://www.1111.com.tw/corp/"&IoNo&"/?agent=home_position_schema_sales" '結構化標記用
-            ILinkESchema="https://www.1111.com.tw/job/"&IeNo&"/?agent=home_position_schema_sales" '結構化標記用
-            schemadescription=Imatter:schemadescription=iif(schemadescription="",Iposition,schemadescription)
-
-            htmlslide=htmlslide&_
-            "<div class=""swiper-slide"">"&_
-            "    <div class=""card"">"&_
-            "        <div class=""card-body"">"&_
-            "            <a class=""stretched-link"" href=""/job/"&IeNo&"/"" target=""_blank""></a>"&_
-            "            <h4 class=""jobTitle card-title"">"&Iposition&"</h4>"&_
-            "            <p class=""card-text cmpName""><span class=""cmp"">"&Iorgan&"</span> | <span class=""cmpTrade"">"&Itrade&"</span></p>"&_
-            "            <p class=""jobSalary card-text"">"&Isalary&"</p>"&_
-            "            <p class=""card-text story""><span class=""exp"">"&Iexperience&"</span> | <span class=""gr"">"&Igrade&"</span></p>"&_
-            "            <p class=""jobContent card-text"">"&Imatter&"</p>"&_
-            "        </div>"&_
-            "    </div>"&_
-            "</div>"
-            htmlslide=htmlslide&_
-            "<script  type=""application/ld+json"">"&_
-            "    {"&_
-            "        ""@context"": ""http://schema.org"","&_
-            "        ""@type"": ""Event"","&_
-            "        ""startDate"": """&IdateChange&""","&_
-            "        ""name"": """&FilterSEO(Iposition)&""","&_
-            "        ""eventAttendanceMode"": ""https://schema.org/OnlineEventAttendanceMode"","&_
-            "        ""eventStatus"": ""EventScheduled"","&_
-            "        ""organizer"": {"&_
-            "            ""name"": ""1111人力銀行"","&_
-            "            ""url"": ""https://www.1111.com.tw"""&_
-            "        },"&_
-            "        ""location"": {"&_
-            "            ""@type"": ""Place"","&_
-            "            ""name"": """&SchemaWorkCity&""","&_
-            "            ""address"": {"&_
-            "                ""@type"": ""PostalAddress"","&_
-            "                ""postalCode"": """&iif(IworkZip="",0,IworkZip)&""""&_
-            "            }"&_
-            "        },"&_
-            "        ""performer"": {"&_
-            "            ""@type"": ""Organization"","&_
-            "            ""url"": """&ILinkOSchema&""","&_
-            "            ""name"": """&FilterSEO(Iorgan)&""""&_
-            "        },"&_
-            "        ""description"": """&FilterSEO(schemadescription)&""","&_
-            "        ""image"": ""https://images.1111.com.tw/oad/1355006.jpg"","&_
-            "        ""url"": """&ILinkESchema&""","&_
-            "        ""offers"": {"&_
-            "            ""@type"": ""Offer"","&_
-            "            ""availability"": ""https://schema.org/InStock"","&_
-            "            ""price"": ""0"","&_
-            "            ""priceCurrency"": ""TWD"","&_
-            "            ""validFrom"": """&IdateChange&""","&_
-            "            ""url"": """&ILinkESchema&""""&_
-            "        }"&_
-            "    }"&_
-            "</script>"
-        End If
-    Next
-    htmlslide=htmlslide&"<div class=""swiper-slide""><a class=""moreLink"" href=""/search/job?ks="&KS&""">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>"
-End If
-'最新職缺
-ISort="ooSort asc,score desc,datein desc"
-htmlslide2=""
-Call returnIntumit(indexD,indexC,1,IRules,ISort,KS,searchC,indexS,indexF,PS,Page):SCount=IntumitTotalCount '結果
-If SCount>0 Then 
-    arrI=arrIntumitIndex 
-    ICount=UBound(arrI,2)
-    For ii=0 To ICount
-        If arrI(0,ii)<>"" Then
-            IeNo=arrI(0,ii) '職編
-            IoNo=arrI(1,ii) '廠編
-            Iorgan=arrI(2,ii) '廠名
-            IshowField=arrI(3,ii):If IshowField="" Or Not IsNumeric(IshowField) Then IshowField=0 '客製顯示
-            If (clng(IshowField) And 8)=8 Then Iorgan="(派遣)"&Iorgan Else If (clng(IshowField) And 16)=16 Then Iorgan="(代招)"&Iorgan Else If (clng(IshowField) And 2048)=2048 Then Iorgan="(獵頭)"&Iorgan '特殊廠商
-            Iposition=arrI(4,ii) '職缺名
-            If Instr(Iposition,"amp")>0 And Instr(Iposition,";")>0 And Instr(Iposition,"&")>0 Then Iposition=Replace(Replace(Replace(Iposition,"<em>",""),"</em>",""),"amp;","") 'amp關鍵字處理
-            Iexper=chkArray(aExperienceO,arrI(5,ii),0):Iexperience=Iexper&"以上" '工作經驗   
-            Imatch=arrI(6,ii):If Iexper="" Then Iexperience="經驗不拘" Else If arrI(5,ii)="1" and (Imatch and 1)=0 Then Iexperience=Iexper&"可" Else If (Imatch and 1)=1 Then Iexperience="限定 "&Iexper Else If (Imatch and 2)=2 Then Iexperience=Iexper&"以下" Else Iexperience=Iexper&"以上" '經驗限制
-            Igrade=""
-            for g=0 to ubound(aoGrade) 
-                if (arrI(7,ii) and cint(split(aoGrade(g),"_")(0))) = cint(split(aoGrade(g),"_")(0)) then 
-                    Igrade=Igrade & chkArray(aoGrade,cint(split(aoGrade(g),"_")(0)),0) &"、"
-                end if
-            next
-            Igrade=RepRight(Igrade,"、"):If Igrade="" Then Igrade="學歷不拘"
-            ItradeNo=arrI(8,ii):Itrade=ArrayChange(1,2,ItradeNo,"tCodeTrade",11) '行業類別
-            Isalary=arrI(9,ii):Is0="":Is1="":Is2="" '薪資
-            if instr(Isalary,"‧")>0 then
-                arrIS=Split(Isalary,"‧")
-                If InStr(arrIS(0),"不支薪")>0 or (InStr(arrIS(0),"48")>0 and InStr(arrIS(0),"年含以上）")>0) Then 
-                    Isalary= arrIS(0)
-                ElseIf InStr(arrIS(0),"面議")>0 Then 
-                    Isalary= "面議（經常性薪資4萬/月含以上）"
-                Else
-                    If UBound(arrIS)=2 Then Is0=arrIS(0):Is1=Formatnumbers(arrIS(1),0):Is2=Formatnumbers(arrIS(2),0):Erase arrIS:Isalary=Is0&" "&Is1&"元":If (cLng(Imatch) and 65536)=65536 Then Isalary=Isalary&" 以上" Else If Is2<>"" And Is2<>"0" And Is1<>Is2 Then Isalary=Is0&" "&Is1&"~"&Is2&"元" '非面議
-                End If
-            Else
-                Isalary= "面議（經常性薪資4萬/月含以上）"
-            end if
-            Imatter=arrI(10,ii):Imatter=iif(Imatter="",Iposition,Imatter)
-            IdateChange=arrI(11,ii):IdateExpire=IdateChange:If IsDate(IdateChange) Then IdateChange=Year(IdateChange)&"-"&Right(Month(IdateChange)+100,2)&"-"&Right(Day(IdateChange)+100,2):IdateExpire=dateadd("yyyy",1,IdateChange) '更新日期
-            IcityCode=arrI(12,ii):If IcityCode="" Or Not IsNumeric(IcityCode) Then IcityCode=0 '工作地代碼
-            IworkCity="不拘":IworkCountry="":IworkZip="":If ArrayChange(1,2,IcityCode,"tCodeCity",11) <> "" Then IworkCountry=Replace(ArrayChange(1,2,IcityCode,"tCodeCity",13),"地區",""):If clng(IcityCode/10000)=10 Or clng(IcityCode/10000)=11 Then IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",14):IworkZip=iif(clng(IcityCode/10000)=10,chkArray(aZip,IcityCode,0),"") Else IworkCity=ArrayChange(1,2,IcityCode,"tCodeCity",11) '工作地名稱
-            SchemaWorkCity=IworkCity
-            ILinkOSchema="https://www.1111.com.tw/corp/"&IoNo&"/" '結構化標記用
-            ILinkESchema="https://www.1111.com.tw/job/"&IeNo&"/" '結構化標記用
-            schemadescription=Imatter:schemadescription=iif(schemadescription="",Iposition,schemadescription)
-
-            htmlslide2=htmlslide2&_
-            "<div class=""swiper-slide"">"&_
-            "    <div class=""card"">"&_
-            "        <div class=""card-body"">"&_
-            "            <a class=""stretched-link"" href=""/job/"&IeNo&"/"" target=""_blank""></a>"&_
-            "            <h4 class=""jobTitle card-title"">"&Iposition&"</h4>"&_
-            "            <p class=""card-text cmpName""><span class=""cmp"">"&Iorgan&"</span> | <span class=""cmpTrade"">"&Itrade&"</span></p>"&_
-            "            <p class=""jobSalary card-text"">"&Isalary&"</p>"&_
-            "            <p class=""card-text story""><span class=""exp"">"&Iexperience&"</span> | <span class=""gr"">"&Igrade&"</span></p>"&_
-            "            <p class=""jobContent card-text"">"&Imatter&"</p>"&_
-            "        </div>"&_
-            "    </div>"&_
-            "</div>"
-        End If
-    Next
-    htmlslide2=htmlslide2&"<div class=""swiper-slide""><a class=""moreLink"" href=""/search/job?gr=16&ks="&KS&""">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>"
-End If
-%>
-<%
-title = "轉職軟體工程師攻略 只要作對這些事，高薪未來不是夢"
-description = "軟體工程師職涯前景看好且薪資傲人，是求職或轉職的熱門目標，坊間也有許多相關補習班，但業內真相卻是薪資落差極大！同樣是寫程式，究竟能夠領高薪的佼佼者在職涯中，做對了哪些事？"
-shareimg = "https://www.1111.com.tw/position/img/shareimg.jpg"
-url = "https://www.1111.com.tw/position/software-engineer/"
-%>
+﻿
 
 <!DOCTYPE html>
 <html  lang="zh-Hant-TW">
@@ -223,15 +33,15 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 <meta name="twitter:url" content="https://www.1111.com.tw/position/software-engineer/" />
 <meta name="twitter:image" content="https://www.1111.com.tw/position/img/software-engineer.jpg">
 <meta property="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://www.1111.com.tw/position/software-engineer/" />
-<link rel="stylesheet" href="/position/css/bootstrap.min.css">
+<link rel="canonical" href="https://www.1111.com.tw/position/software-engineer.jpg" />
+<link rel="stylesheet" href="../css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,200,300,400,500,600,700,900&amp;display=swap"> -->
 <link href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="/position/css/common.css?v=20201223">
-<script src="/position/js/jquery-1.11.1.min.js"></script>
-<script src="/position/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="../css/common.css?v=20201223">
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
 <script type="application/ld+json">
@@ -244,7 +54,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
         ]
     }
 </script>
-    <link rel="stylesheet" href="/position/css/page-style.css?v=20201223">
+    <link rel="stylesheet" href="../css/page-style.css?v=20201223">
 </head>
 
 <body>
@@ -322,9 +132,8 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 			</form>
 			<div id="search_click_Mask"></div>
 		</header>	
-		<!-- End header -->	
-
 		<!-- End header -->
+
         <header>
             <a href="#category" data-toggle="collapse" class="category d-none d-sm-none d-md-none d-lg-block "><i
                     class="fas fa-list-ul"></i> 目錄</a>
@@ -359,16 +168,15 @@ url = "https://www.1111.com.tw/position/software-engineer/"
             </ul>
 
         </header>
-        
         <!-- / 導航列? -->
-        <section class="breadcrumbs givePadding">
+        <section class="breadcrumbs">
             <div class="container">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="http://192.168.1.234/position/index-profession-dictionary.asp">首頁</a></li>
                         <li class="breadcrumb-item"><a href="http://192.168.1.234/position/catagory.asp">求職密技</a></li>
                         <li class="breadcrumb-item active" aria-current="page">軟體工程師</li>
-                        </ul>
+                        </ol>
                 </nav>
                 <!-- / 麵包屑 -->
             </div>
@@ -378,7 +186,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                 <h1>轉職軟體工程師攻略  只要作對這些事，高薪未來不是夢</h1>
                 
                 <figure class="text-center">
-                    <img class="img-fluid d-block img_center" src="/position/img/software-engineer.jpg"
+                    <img class="img-fluid d-block img_center" src="../img/software-engineer.jpg"
                         alt="軟體工程師">
                 </figure>
                 <p class="text-left"><span class="article-author"> 文 / 唐鴻</span>     <span class="article-tag"><a href="http://192.168.1.234/position/catagory.asp"><i class="fas fa-tags"></i>求職密技</a></span> </p>
@@ -436,7 +244,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                 </ol>
 
                 <figure class="text-center">
-                    <img class="img-fluid d-block img_center" src="/position/img/software-engineer-coding.jpg"
+                    <img class="img-fluid d-block img_center" src="../img/software-engineer-coding.jpg"
                         alt="軟體工程師coding">
                 </figure>
             </div>
@@ -614,7 +422,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 
 
                 <figure class="text-center">
-                    <img class="img-fluid d-block img_center" src="/position/img/software-engineer-interview.jpg"
+                    <img class="img-fluid d-block img_center" src="../img/software-engineer-interview.jpg"
                         alt="軟體工程師面試">
                 </figure>
 
@@ -690,11 +498,11 @@ url = "https://www.1111.com.tw/position/software-engineer/"
 
                 <figure class="text-center">
                     <div class="software-engineer_img-pc"> 
-                        <img class="img-fluid d-block img_center" src="/position/img/software-engineer-interview-to-do-list.jpg"
+                        <img class="img-fluid d-block img_center" src="../img/software-engineer-interview-to-do-list.jpg"
                         alt="軟體工程師面試">
                     </div>
                     <div class="software-engineer_img-Mobile"> 
-                        <img class="img-fluid d-block img_center" src="/position/img/1111 icon0-05.jpg"
+                        <img class="img-fluid d-block img_center" src="../img/1111 icon0-05.jpg"
                         alt="軟體工程師面試">
                     </div>
                 </figure>
@@ -756,7 +564,64 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                 <div class="swiper-container">
                     <!-- Additional required wrapper -->
                     <div class="swiper-wrapper">
-                    <%=htmlslide %>
+                        <!-- Slides -->
+                        <div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91425505/" target="_blank"></a>            <h4 class="jobTitle card-title">【台中精明館】美甲、美睫師／台中西區-想創業的美髮師/美髮專業設計師/美髮師</h4>            <p class="card-text cmpName"><span class="cmp">海納資產管理有限公司</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 30,000元 以上</p>            <p class="card-text story"><span class="exp">1年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">***************************************************************************************
+                    職缺需求: 專業美睫師、專業美甲師、紋繡老師、美容老師
+                    （媒合至店家都需執有專業證照）
+
+                    只要肯學習,認真上近肯負責,只要不怕吃苦肯努力都歡迎您～保障底薪30000$（無經驗可）
+
+                    ***************************************************************************************
+
+                    福利制度
+                    *完整配合協會教育SOP流程
+                    *依考核進階課程並頒發不同階段的證書
+                    *頒發國際級證照
+                    *自由彈性休假
+                    *享每日.每週.每月業績績效分紅
+                    *買工具材料店家批發價
+                    *練習材料自由取用(部分高成本材料例外)
+                    *達團體業積門檻慶功宴、聚餐、旅遊
+                    *同事不會惡性競爭，安心培養指定的牢點(客戶)
+                    *做越久越穩定，高收入不是夢!
+
+                    1.業界唯一內地298家通路,日本一間
+                    2.業界唯一可外派內地駐點
+                    3.業界唯一可般發給國際型證照
+                    4.業界唯一經理人制度
+                    5.業界最完善的分紅制度
+                    6.業界唯一國際型連鎖加盟
+                    (1)培訓儲備店長可享無限的店績分紅，想達到你就來吧!!!
+                    (2)培養專業講師授課教學(可選擇中國、美國、日本教課)
+                    (3)技術指導總監(可選擇中國、美國、日本教課)
+                    誠徵有志一同的專業美睫美甲技術者,和團隊一起打造美麗終身志業!
+
+                    2015年美睫美甲業最好的機會來臨
+                    公司代言人有羅志祥.蔡依林.陳喬恩.明道
+                    兩岸三地以及日本旗下行業有手錶.皮包.衣服.美容.美睫.美甲.美髮.生技.形象設計等數百經銷點
+                    品牌有MORRIS KˋCLOIEˋNBAˋYUANˋ1975ˋ朵兒極致美學苑ˋ藝皇ˋ天下皇剪....日韓歐美品牌大中華區總代理
+                    六月份完成日本分店加盟簽約
+                    ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+                    北台灣最大品牌!
+                    目前全省店數十一間未來一年內公司目標達成二十店
+                    目前積極尋找分店長 儲備店長 專業美睫.美甲老師.紋繡老師
+                    歡迎中南部有事業心想學一輩子的專業美容技能（店長儲備店長另外可學紋繡技能）
+                    挑戰百萬分紅！！！
+                    ===============================
+                    下列店家皆有職區 （有／無經驗可洽詢）
+                    台中一中館：台中市北區三民路三段217號B1-1
+                    台中精明館：台中市西區忠明南路12巷2號(中油旁)
+                    台南東區館：台南市東區中華東路二段185巷25號
+                    高雄三多館：高雄市苓雅區林森二路17巷5號</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-09",        "name": "【台中精明館】美甲、美睫師／台中西區-想創業的美髮師/美髮專業設計師/美髮師",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台中市西區",            "address": {                "@type": "PostalAddress",                "postalCode": "403"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/73173422/?agent=home_position_schema_sales",            "name": "海納資產管理有限公司"        },        "description": "***************************************************************************************職缺需求: 專業美睫師、專業美甲師、紋繡老師、美容老師（媒合至店家都需執有專業證照）只要肯學習,認真上近肯負責,只要不怕吃苦肯努力都歡迎您～保障底薪30000$（無經驗可）***************************************************************************************福利制度*完整配合協會教育SOP流程*依考核進階課程並頒發不同階段的證書*頒發國際級證照*自由彈性休假*享每日.每週.每月業績績效分紅*買工具材料店家批發價*練習材料自由取用(部分高成本材料例外)*達團體業積門檻慶功宴、聚餐、旅遊*同事不會惡性競爭，安心培養指定的牢點(客戶)*做越久越穩定，高收入不是夢!1.業界唯一內地298家通路,日本一間2.業界唯一可外派內地駐點3.業界唯一可般發給國際型證照4.業界唯一經理人制度5.業界最完善的分紅制度6.業界唯一國際型連鎖加盟(1)培訓儲備店長可享無限的店績分紅，想達到你就來吧!!!(2)培養專業講師授課教學(可選擇中國、美國、日本教課)(3)技術指導總監(可選擇中國、美國、日本教課)誠徵有志一同的專業美睫美甲技術者,和團隊一起打造美麗終身志業!2015年美睫美甲業最好的機會來臨公司代言人有羅志祥.蔡依林.陳喬恩.明道兩岸三地以及日本旗下行業有手錶.皮包.衣服.美容.美睫.美甲.美髮.生技.形象設計等數百經銷點品牌有MORRIS KˋCLOIEˋNBAˋYUANˋ1975ˋ朵兒極致美學苑ˋ藝皇ˋ天下皇剪....日韓歐美品牌大中華區總代理六月份完成日本分店加盟簽約––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––北台灣最大品牌!目前全省店數十一間未來一年內公司目標達成二十店目前積極尋找分店長 儲備店長 專業美睫.美甲老師.紋繡老師歡迎中南部有事業心想學一輩子的專業美容技能（店長儲備店長另外可學紋繡技能）挑戰百萬分紅！！！下列店家皆有職區 （有／無經驗可洽詢）台中一中館：台中市北區三民路三段217號B1-1台中精明館：台中市西區忠明南路12巷2號(中油旁)台南東區館：台南市東區中華東路二段185巷25號高雄三多館：高雄市苓雅區林森二路17巷5號",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91425505/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-09",            "url": "https://www.1111.com.tw/job/91425505/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/85019494/" target="_blank"></a>            <h4 class="jobTitle card-title">洗髮師/美髮師(林口館)</h4>            <p class="card-text cmpName"><span class="cmp">晶英產後護理之家</span> | <span class="cmpTrade">護理之家╱安養中心</span></p>            <p class="jobSalary card-text">論件計酬 200元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">高中職、專科、大學、碩士、博士</span></p>            <p class="jobContent card-text">洗+吹整
+                    用品皆公司提供
+                    需配合館內的客戶預約洗髮服務 
+                    洗髮工作時間彈性,可依洗髮師時間做調整 
+                    曾有美髮工作經驗者佳
+                    *每週兩次*</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "洗髮師/美髮師(林口館)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市林口區",            "address": {                "@type": "PostalAddress",                "postalCode": "244"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/67712194/?agent=home_position_schema_sales",            "name": "晶英產後護理之家"        },        "description": "洗+吹整用品皆公司提供需配合館內的客戶預約洗髮服務 洗髮工作時間彈性,可依洗髮師時間做調整 曾有美髮工作經驗者佳*每週兩次*",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/85019494/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/85019494/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/80097534/" target="_blank"></a>            <h4 class="jobTitle card-title">培訓美髮師-美髮助理-新莊店</h4>            <p class="card-text cmpName"><span class="cmp">新店美髮沙龍館</span> | <span class="cmpTrade">美髮相關</span></p>            <p class="jobSalary card-text">月薪 24,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">●精緻髮型沙龍之現場美髮助理人員
+                    ●對美髮行業具備熱忱與服務熱心
+                    ●提供完整教育課程進修
+                    (洗/剪/燙/染/護/接髮/頭皮護理...等)
+                    ●歡迎會玩，會做，肯學的夥伴加入</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-09",        "name": "培訓美髮師-美髮助理-新莊店",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市新莊區",            "address": {                "@type": "PostalAddress",                "postalCode": "242"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/51687861/?agent=home_position_schema_sales",            "name": "新店美髮沙龍館"        },        "description": "●精緻髮型沙龍之現場美髮助理人員●對美髮行業具備熱忱與服務熱心●提供完整教育課程進修(洗/剪/燙/染/護/接髮/頭皮護理...等)●歡迎會玩，會做，肯學的夥伴加入",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/80097534/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-09",            "url": "https://www.1111.com.tw/job/80097534/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/57267922/" target="_blank"></a>            <h4 class="jobTitle card-title">假日兼職美髮師(彰化縣)</h4>            <p class="card-text cmpName"><span class="cmp">髮秀仕瞬型屋(婕諾國際有限公司)</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 25,000~50,000元</p>            <p class="card-text story"><span class="exp">半年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">快速專業剪髮</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "假日兼職美髮師(彰化縣)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "彰化縣和美鎮",            "address": {                "@type": "PostalAddress",                "postalCode": "508"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/542724/?agent=home_position_schema_sales",            "name": "髮秀仕瞬型屋(婕諾國際有限公司)"        },        "description": "快速專業剪髮",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/57267922/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/57267922/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56777119/" target="_blank"></a>            <h4 class="jobTitle card-title">假日兼職美髮師(屏東縣市)</h4>            <p class="card-text cmpName"><span class="cmp">髮秀仕瞬型屋(婕諾國際有限公司)</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 25,000~50,000元</p>            <p class="card-text story"><span class="exp">半年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">快速專業剪髮</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "假日兼職美髮師(屏東縣市)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "屏東縣內埔鄉",            "address": {                "@type": "PostalAddress",                "postalCode": "912"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/542724/?agent=home_position_schema_sales",            "name": "髮秀仕瞬型屋(婕諾國際有限公司)"        },        "description": "快速專業剪髮",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56777119/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56777119/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56777093/" target="_blank"></a>            <h4 class="jobTitle card-title">假日兼職美髮師(屏東市)</h4>            <p class="card-text cmpName"><span class="cmp">髮秀仕瞬型屋(婕諾國際有限公司)</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 25,000~50,000元</p>            <p class="card-text story"><span class="exp">半年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">快速專業剪髮</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "假日兼職美髮師(屏東市)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "屏東縣屏東市",            "address": {                "@type": "PostalAddress",                "postalCode": "900"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/542724/?agent=home_position_schema_sales",            "name": "髮秀仕瞬型屋(婕諾國際有限公司)"        },        "description": "快速專業剪髮",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56777093/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56777093/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56625451/" target="_blank"></a>            <h4 class="jobTitle card-title">3D快剪永和店.-美髮師-美髮設計師</h4>            <p class="card-text cmpName"><span class="cmp">3D專業快速剪髮</span> | <span class="cmpTrade">美髮相關</span></p>            <p class="jobSalary card-text">論件計酬 26,200~45,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">百元快速剪髮/不洗/不染/不燙,專心做好剪髮..</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "3D快剪永和店.-美髮師-美髮設計師",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市永和區",            "address": {                "@type": "PostalAddress",                "postalCode": "234"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/51650957/?agent=home_position_schema_sales",            "name": "3D專業快速剪髮"        },        "description": "百元快速剪髮/不洗/不染/不燙,專心做好剪髮..",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56625451/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56625451/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56625448/" target="_blank"></a>            <h4 class="jobTitle card-title">3D快剪信義店-美髮師-美髮設計師</h4>            <p class="card-text cmpName"><span class="cmp">3D專業快速剪髮</span> | <span class="cmpTrade">美髮相關</span></p>            <p class="jobSalary card-text">論件計酬 26,200~45,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">百元快速剪髮/不洗/不染/不燙,專心做好剪髮..</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "3D快剪信義店-美髮師-美髮設計師",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市信義區",            "address": {                "@type": "PostalAddress",                "postalCode": "110"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/51650957/?agent=home_position_schema_sales",            "name": "3D專業快速剪髮"        },        "description": "百元快速剪髮/不洗/不染/不燙,專心做好剪髮..",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56625448/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56625448/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide"><a class="moreLink" href="/search/job?ks=美髮師">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>
@@ -822,7 +687,64 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                 <div class="swiper-container">
                     <!-- Additional required wrapper -->
                     <div class="swiper-wrapper">
-                    <%=htmlslide2 %>
+                        <!-- Slides -->
+                        <div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/91425505/" target="_blank"></a>            <h4 class="jobTitle card-title">【台中精明館】美甲、美睫師／台中西區-想創業的美髮師/美髮專業設計師/美髮師</h4>            <p class="card-text cmpName"><span class="cmp">海納資產管理有限公司</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 30,000元 以上</p>            <p class="card-text story"><span class="exp">1年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">***************************************************************************************
+                    職缺需求: 專業美睫師、專業美甲師、紋繡老師、美容老師
+                    （媒合至店家都需執有專業證照）
+
+                    只要肯學習,認真上近肯負責,只要不怕吃苦肯努力都歡迎您～保障底薪30000$（無經驗可）
+
+                    ***************************************************************************************
+
+                    福利制度
+                    *完整配合協會教育SOP流程
+                    *依考核進階課程並頒發不同階段的證書
+                    *頒發國際級證照
+                    *自由彈性休假
+                    *享每日.每週.每月業績績效分紅
+                    *買工具材料店家批發價
+                    *練習材料自由取用(部分高成本材料例外)
+                    *達團體業積門檻慶功宴、聚餐、旅遊
+                    *同事不會惡性競爭，安心培養指定的牢點(客戶)
+                    *做越久越穩定，高收入不是夢!
+
+                    1.業界唯一內地298家通路,日本一間
+                    2.業界唯一可外派內地駐點
+                    3.業界唯一可般發給國際型證照
+                    4.業界唯一經理人制度
+                    5.業界最完善的分紅制度
+                    6.業界唯一國際型連鎖加盟
+                    (1)培訓儲備店長可享無限的店績分紅，想達到你就來吧!!!
+                    (2)培養專業講師授課教學(可選擇中國、美國、日本教課)
+                    (3)技術指導總監(可選擇中國、美國、日本教課)
+                    誠徵有志一同的專業美睫美甲技術者,和團隊一起打造美麗終身志業!
+
+                    2015年美睫美甲業最好的機會來臨
+                    公司代言人有羅志祥.蔡依林.陳喬恩.明道
+                    兩岸三地以及日本旗下行業有手錶.皮包.衣服.美容.美睫.美甲.美髮.生技.形象設計等數百經銷點
+                    品牌有MORRIS KˋCLOIEˋNBAˋYUANˋ1975ˋ朵兒極致美學苑ˋ藝皇ˋ天下皇剪....日韓歐美品牌大中華區總代理
+                    六月份完成日本分店加盟簽約
+                    ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+                    北台灣最大品牌!
+                    目前全省店數十一間未來一年內公司目標達成二十店
+                    目前積極尋找分店長 儲備店長 專業美睫.美甲老師.紋繡老師
+                    歡迎中南部有事業心想學一輩子的專業美容技能（店長儲備店長另外可學紋繡技能）
+                    挑戰百萬分紅！！！
+                    ===============================
+                    下列店家皆有職區 （有／無經驗可洽詢）
+                    台中一中館：台中市北區三民路三段217號B1-1
+                    台中精明館：台中市西區忠明南路12巷2號(中油旁)
+                    台南東區館：台南市東區中華東路二段185巷25號
+                    高雄三多館：高雄市苓雅區林森二路17巷5號</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-09",        "name": "【台中精明館】美甲、美睫師／台中西區-想創業的美髮師/美髮專業設計師/美髮師",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台中市西區",            "address": {                "@type": "PostalAddress",                "postalCode": "403"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/73173422/?agent=home_position_schema_sales",            "name": "海納資產管理有限公司"        },        "description": "***************************************************************************************職缺需求: 專業美睫師、專業美甲師、紋繡老師、美容老師（媒合至店家都需執有專業證照）只要肯學習,認真上近肯負責,只要不怕吃苦肯努力都歡迎您～保障底薪30000$（無經驗可）***************************************************************************************福利制度*完整配合協會教育SOP流程*依考核進階課程並頒發不同階段的證書*頒發國際級證照*自由彈性休假*享每日.每週.每月業績績效分紅*買工具材料店家批發價*練習材料自由取用(部分高成本材料例外)*達團體業積門檻慶功宴、聚餐、旅遊*同事不會惡性競爭，安心培養指定的牢點(客戶)*做越久越穩定，高收入不是夢!1.業界唯一內地298家通路,日本一間2.業界唯一可外派內地駐點3.業界唯一可般發給國際型證照4.業界唯一經理人制度5.業界最完善的分紅制度6.業界唯一國際型連鎖加盟(1)培訓儲備店長可享無限的店績分紅，想達到你就來吧!!!(2)培養專業講師授課教學(可選擇中國、美國、日本教課)(3)技術指導總監(可選擇中國、美國、日本教課)誠徵有志一同的專業美睫美甲技術者,和團隊一起打造美麗終身志業!2015年美睫美甲業最好的機會來臨公司代言人有羅志祥.蔡依林.陳喬恩.明道兩岸三地以及日本旗下行業有手錶.皮包.衣服.美容.美睫.美甲.美髮.生技.形象設計等數百經銷點品牌有MORRIS KˋCLOIEˋNBAˋYUANˋ1975ˋ朵兒極致美學苑ˋ藝皇ˋ天下皇剪....日韓歐美品牌大中華區總代理六月份完成日本分店加盟簽約––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––北台灣最大品牌!目前全省店數十一間未來一年內公司目標達成二十店目前積極尋找分店長 儲備店長 專業美睫.美甲老師.紋繡老師歡迎中南部有事業心想學一輩子的專業美容技能（店長儲備店長另外可學紋繡技能）挑戰百萬分紅！！！下列店家皆有職區 （有／無經驗可洽詢）台中一中館：台中市北區三民路三段217號B1-1台中精明館：台中市西區忠明南路12巷2號(中油旁)台南東區館：台南市東區中華東路二段185巷25號高雄三多館：高雄市苓雅區林森二路17巷5號",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/91425505/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-09",            "url": "https://www.1111.com.tw/job/91425505/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/85019494/" target="_blank"></a>            <h4 class="jobTitle card-title">洗髮師/美髮師(林口館)</h4>            <p class="card-text cmpName"><span class="cmp">晶英產後護理之家</span> | <span class="cmpTrade">護理之家╱安養中心</span></p>            <p class="jobSalary card-text">論件計酬 200元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">高中職、專科、大學、碩士、博士</span></p>            <p class="jobContent card-text">洗+吹整
+                    用品皆公司提供
+                    需配合館內的客戶預約洗髮服務 
+                    洗髮工作時間彈性,可依洗髮師時間做調整 
+                    曾有美髮工作經驗者佳
+                    *每週兩次*</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "洗髮師/美髮師(林口館)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市林口區",            "address": {                "@type": "PostalAddress",                "postalCode": "244"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/67712194/?agent=home_position_schema_sales",            "name": "晶英產後護理之家"        },        "description": "洗+吹整用品皆公司提供需配合館內的客戶預約洗髮服務 洗髮工作時間彈性,可依洗髮師時間做調整 曾有美髮工作經驗者佳*每週兩次*",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/85019494/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/85019494/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/80097534/" target="_blank"></a>            <h4 class="jobTitle card-title">培訓美髮師-美髮助理-新莊店</h4>            <p class="card-text cmpName"><span class="cmp">新店美髮沙龍館</span> | <span class="cmpTrade">美髮相關</span></p>            <p class="jobSalary card-text">月薪 24,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">●精緻髮型沙龍之現場美髮助理人員
+                    ●對美髮行業具備熱忱與服務熱心
+                    ●提供完整教育課程進修
+                    (洗/剪/燙/染/護/接髮/頭皮護理...等)
+                    ●歡迎會玩，會做，肯學的夥伴加入</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-09",        "name": "培訓美髮師-美髮助理-新莊店",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市新莊區",            "address": {                "@type": "PostalAddress",                "postalCode": "242"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/51687861/?agent=home_position_schema_sales",            "name": "新店美髮沙龍館"        },        "description": "●精緻髮型沙龍之現場美髮助理人員●對美髮行業具備熱忱與服務熱心●提供完整教育課程進修(洗/剪/燙/染/護/接髮/頭皮護理...等)●歡迎會玩，會做，肯學的夥伴加入",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/80097534/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-09",            "url": "https://www.1111.com.tw/job/80097534/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/57267922/" target="_blank"></a>            <h4 class="jobTitle card-title">假日兼職美髮師(彰化縣)</h4>            <p class="card-text cmpName"><span class="cmp">髮秀仕瞬型屋(婕諾國際有限公司)</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 25,000~50,000元</p>            <p class="card-text story"><span class="exp">半年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">快速專業剪髮</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-10",        "name": "假日兼職美髮師(彰化縣)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "彰化縣和美鎮",            "address": {                "@type": "PostalAddress",                "postalCode": "508"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/542724/?agent=home_position_schema_sales",            "name": "髮秀仕瞬型屋(婕諾國際有限公司)"        },        "description": "快速專業剪髮",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/57267922/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-10",            "url": "https://www.1111.com.tw/job/57267922/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56777119/" target="_blank"></a>            <h4 class="jobTitle card-title">假日兼職美髮師(屏東縣市)</h4>            <p class="card-text cmpName"><span class="cmp">髮秀仕瞬型屋(婕諾國際有限公司)</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 25,000~50,000元</p>            <p class="card-text story"><span class="exp">半年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">快速專業剪髮</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "假日兼職美髮師(屏東縣市)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "屏東縣內埔鄉",            "address": {                "@type": "PostalAddress",                "postalCode": "912"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/542724/?agent=home_position_schema_sales",            "name": "髮秀仕瞬型屋(婕諾國際有限公司)"        },        "description": "快速專業剪髮",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56777119/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56777119/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56777093/" target="_blank"></a>            <h4 class="jobTitle card-title">假日兼職美髮師(屏東市)</h4>            <p class="card-text cmpName"><span class="cmp">髮秀仕瞬型屋(婕諾國際有限公司)</span> | <span class="cmpTrade">美容╱美體相關</span></p>            <p class="jobSalary card-text">月薪 25,000~50,000元</p>            <p class="card-text story"><span class="exp">半年工作經驗以上</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">快速專業剪髮</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "假日兼職美髮師(屏東市)",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "屏東縣屏東市",            "address": {                "@type": "PostalAddress",                "postalCode": "900"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/542724/?agent=home_position_schema_sales",            "name": "髮秀仕瞬型屋(婕諾國際有限公司)"        },        "description": "快速專業剪髮",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56777093/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56777093/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56625451/" target="_blank"></a>            <h4 class="jobTitle card-title">3D快剪永和店.-美髮師-美髮設計師</h4>            <p class="card-text cmpName"><span class="cmp">3D專業快速剪髮</span> | <span class="cmpTrade">美髮相關</span></p>            <p class="jobSalary card-text">論件計酬 26,200~45,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">百元快速剪髮/不洗/不染/不燙,專心做好剪髮..</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "3D快剪永和店.-美髮師-美髮設計師",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "新北市永和區",            "address": {                "@type": "PostalAddress",                "postalCode": "234"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/51650957/?agent=home_position_schema_sales",            "name": "3D專業快速剪髮"        },        "description": "百元快速剪髮/不洗/不染/不燙,專心做好剪髮..",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56625451/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56625451/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide">    <div class="card">        <div class="card-body">            <a class="stretched-link" href="/job/56625448/" target="_blank"></a>            <h4 class="jobTitle card-title">3D快剪信義店-美髮師-美髮設計師</h4>            <p class="card-text cmpName"><span class="cmp">3D專業快速剪髮</span> | <span class="cmpTrade">美髮相關</span></p>            <p class="jobSalary card-text">論件計酬 26,200~45,000元</p>            <p class="card-text story"><span class="exp">經驗不拘</span> | <span class="gr">學歷不拘</span></p>            <p class="jobContent card-text">百元快速剪髮/不洗/不染/不燙,專心做好剪髮..</p>        </div>    </div></div><script  type="application/ld+json">    {        "@context": "http://schema.org",        "@type": "Event",        "startDate": "2021-01-11",        "name": "3D快剪信義店-美髮師-美髮設計師",        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",        "eventStatus": "EventScheduled",        "organizer": {            "name": "1111人力銀行",            "url": "https://www.1111.com.tw"        },        "location": {            "@type": "Place",            "name": "台北市信義區",            "address": {                "@type": "PostalAddress",                "postalCode": "110"            }        },        "performer": {            "@type": "Organization",            "url": "https://www.1111.com.tw/corp/51650957/?agent=home_position_schema_sales",            "name": "3D專業快速剪髮"        },        "description": "百元快速剪髮/不洗/不染/不燙,專心做好剪髮..",        "image": "https://images.1111.com.tw/oad/1355006.jpg",        "url": "https://www.1111.com.tw/job/56625448/?agent=home_position_schema_sales",        "offers": {            "@type": "Offer",            "availability": "https://schema.org/InStock",            "price": "0",            "priceCurrency": "TWD",            "validFrom": "2021-01-11",            "url": "https://www.1111.com.tw/job/56625448/?agent=home_position_schema_sales"        }    }</script><div class="swiper-slide"><a class="moreLink" href="/search/job?ks=美髮師">沒看到你想要的職缺嗎？<br>點我觀看更多職缺</a></div>
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>
@@ -838,7 +760,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
                 <br><br><br><br><br><br><br><br>
 
 
-                <h2 id="section5" class="text-center"> 轉職軟體工程師，原本領域經驗優勢成高薪密技</h2>
+                <h2 id="section7" class="text-center"> 轉職軟體工程師，原本領域經驗優勢成高薪密技</h2>
                 <p class="mb-for-first-p">
                     轉職者想要成為高薪的軟體工程師，其實有一項科班出身的軟體工程師未必有的優勢，即對於「原產業的相關知識」，尤其現在很多產業都在進行IT改革（如APP化的銀行）或是數位轉型（如出版業變成線上訂閱），抑或擁抱電子商務，希望能帶給原來產業新的機會。<br><br>
                     所以<em>如果轉職者原本熟悉的產業，正在進行前述的轉型，擁有產業知識與程式語言技能的軟體工程師，就會非常吃香</em>。例如銀行近年講求數位化，如果求職的軟體工程師同時具有熟稔的金融與軟體技術背景，銀行應該是用八人大轎抬著來請這位「T型跨領域人才」工程師趕快去上班，並奉上可觀的高薪與福利！<br><br>
@@ -1077,7 +999,7 @@ url = "https://www.1111.com.tw/position/software-engineer/"
           </div>
       </footer>
       <!--footer end-->
-      <script src="./js/page.js"></script>
+      <script src="../js/page.js"></script>
 </body>
 
 </html>
