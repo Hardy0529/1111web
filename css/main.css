@@ -8827,7 +8827,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 }
 
 form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset .site_search_button {
-  background-color: none;
+  background: transparent;
   color: #00356b;
   position: relative;
   float: right;
