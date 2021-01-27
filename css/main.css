@@ -8774,7 +8774,6 @@ form.header_form_seach #js-search {
 form.header_form_seach .site_search_row {
   padding-top: 8px;
   padding-bottom: 28px;
-  background: #f4f4f4;
 }
 
 form.header_form_seach .site_search_row .site_search_cell {
@@ -8825,11 +8824,10 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   margin: 12.5px;
   padding: 0px 10px;
   padding-top: 3px;
-  background-color: #f4f4f4;
 }
 
 form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset .site_search_button {
-  background-color: #f4f4f4;
+  background-color: none;
   color: #00356b;
   position: relative;
   float: right;

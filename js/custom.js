@@ -81,7 +81,7 @@ $(document).ready(function() {
     $("#js-search").hide();
     $("#icon-btn_search").click(function() {
         $(".header").toggleClass("js_header--seach");
-        $("#js-search").slideToggle(500);
+        $("#js-search").slideToggle(300);
         if ($("#js_headerSearch").hasClass("js_header--seach")) {
             $(".header").addClass("js_header--seach");
         }
