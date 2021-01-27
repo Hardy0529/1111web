@@ -9611,8 +9611,8 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   .article .class-nav nav .category-title h3, .article .class-nav nav .category-classify h3 {
     line-height: 48px;
     margin: 0;
-    color: black;
-    font-size: 16px;
+    color: #43484c;
+    font-size: 17px;
     -webkit-transition: 0.3s;
     transition: 0.3s;
     position: absolute;
