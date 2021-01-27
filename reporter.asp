@@ -128,8 +128,7 @@ url = "https://www.1111.com.tw/position/reporter/"
 
 <head>
     <!--#include virtual="/position/set_meta.asp"-->
-    <link rel="stylesheet" href="/position/css/page-style.css?v=<%=cssversion%>">
-    <link rel="stylesheet" href="/position/css/reporter.css?v=<%=cssversion%>">
+    <link rel="stylesheet" href="/position/css/page-style.css?v=<%=cssversion%">
 </head>
 
 <body>

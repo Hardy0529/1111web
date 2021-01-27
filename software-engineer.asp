@@ -245,7 +245,6 @@ url = "https://www.1111.com.tw/position/software-engineer/"
     }
 </script>
     <link rel="stylesheet" href="/position/css/page-style.css?v=20201223">
-    <link rel="stylesheet" href="/position/css/software-engineer.css?v=20201223">
 </head>
 
 <body>
