@@ -269,12 +269,12 @@ header{
   
   .header.header--fix {
     position: fixed;
-    top: 28px;
+    top: 20x;
     left: 0;
   }
   .headerPage.header.header--fix {
     position: fixed;
-    top: 28px;
+    top: 0px;
     left: 0;
   }
   .header .header_form_seach {

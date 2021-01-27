@@ -8982,6 +8982,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   font-size: 42px;
   margin-bottom: 25px;
   font-family: "Raleway", "Helvetica", "roboto", arial, sans-serif;
+  text-align: justify;
 }
 
 @media (max-width: 960px) {
@@ -9005,6 +9006,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
   line-height: 1.5;
   margin-bottom: 15px;
   font-family: "monospace", "Noto Sans TC", "Helvetica", "Roboto", "Arial", "微軟正黑體", sans-serif;
+  text-align: justify;
 }
 
 @media (max-width: 960px) {
@@ -9196,6 +9198,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 
 .thumbnail__title {
   overflow: hidden;
+  text-align: justify;
   font-size: 24px;
   font-weight: 500;
   line-height: 34px;
@@ -9212,6 +9215,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 }
 
 .thumbnail__preview {
+  text-align: justify;
   overflow: hidden;
   margin-bottom: 8px;
   color: rgba(67, 72, 76, 0.7);
@@ -9225,7 +9229,7 @@ form.header_form_seach .site_search_row .site_search_cell .site_search_fieldset 
 
 .thumbnail__date {
   font-size: 14px;
-  color: rgba(0, 53, 107, 0.8);
+  color: rgba(67, 72, 76, 0.9);
 }
 
 .thumbnail__btn-group .btn {
